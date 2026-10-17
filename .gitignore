@@ -1,0 +1,18 @@
+node_modules/
+functions/lib/
+.firebase/
+*-debug.log
+*-debug.*.log
+*.local
+.env
+.env.*
+!.env.example
+service-account*.json
+*-adminsdk-*.json
+emulator-data/
+# Local screenshots and verification output.
+/artifacts/
+.DS_Store
+app/ios/Flutter/Maps.local.xcconfig
+app/android/maps.local.properties
+app/.maps-*.local.json

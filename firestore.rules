@@ -1,0 +1,69 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.get('admin', false) == true;
+    }
+
+    // Mutations go through authenticated server APIs. Admin SDK operations
+    // bypass these rules; an admin custom claim does not grant client writes.
+    match /sites/{siteId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /storyTemplates/{templateId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if false;
+    }
+
+    match /chronicles/{chronicleId} {
+      allow read: if isOwner(resource.data.uid) && resource.data.status != 'deleted';
+      allow write: if false;
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+
+      match /library/{chronicleId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+    }
+
+    match /generationRequests/{requestId} {
+      allow read, write: if false;
+    }
+
+    match /sources/{sourceId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /facts/{factId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /conflicts/{conflictId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /adminAudit/{auditId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Permissions on a document never implicitly expose its subcollections.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

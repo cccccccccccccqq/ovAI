@@ -1,0 +1,45 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.get('admin', false) == true;
+    }
+
+    function ownsActiveChronicle(uid, chronicleId) {
+      return isOwner(uid)
+        && firestore.exists(/databases/(default)/documents/chronicles/$(chronicleId))
+        && firestore.get(/databases/(default)/documents/chronicles/$(chronicleId)).data.uid == uid
+        && firestore.get(/databases/(default)/documents/chronicles/$(chronicleId)).data.status != 'deleted';
+    }
+
+    match /catalog/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /chronicles/{uid}/{chronicleId}/{filename} {
+      allow read: if ownsActiveChronicle(uid, chronicleId);
+      allow write: if false;
+    }
+
+    match /users/{uid}/covers/{filename} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    match /sources/{allPaths=**} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Files and metadata, including download tokens, are server-managed.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

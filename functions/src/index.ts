@@ -1,0 +1,41 @@
+import { getApps, initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import { logger } from "firebase-functions";
+import { setGlobalOptions } from "firebase-functions/v2";
+import { HttpsError, onCall, type CallableRequest } from "firebase-functions/v2/https";
+import { DomainError } from "./domain.js";
+import * as service from "./service.js";
+
+if (getApps().length === 0) initializeApp();
+const database = getFirestore();
+setGlobalOptions({ region: "asia-northeast1", maxInstances: 10 });
+
+// Only the emulator relaxes App Check. Cloud deployments require an attested
+// app as well as Firebase Authentication on every callable.
+const callableOptions = { enforceAppCheck: process.env.FUNCTIONS_EMULATOR !== "true" };
+
+async function authenticated<T>(
+  request: CallableRequest<unknown>,
+  operation: (uid: string, data: unknown) => Promise<T>,
+): Promise<T> {
+  if (!request.auth) throw new HttpsError("unauthenticated", "Sign in before using your cloud library.");
+  try {
+    return await operation(request.auth.uid, request.data);
+  } catch (error: unknown) {
+    if (error instanceof DomainError) throw new HttpsError(error.code, error.message);
+    logger.error("An authenticated library operation failed.", error);
+    throw new HttpsError("internal", "The operation could not be completed. Please try again.");
+  }
+}
+
+export const ensureProfile = onCall(callableOptions, (request) =>
+  authenticated(request, (uid, data) => service.ensureProfile(database, uid, data)));
+
+export const createPreparedChronicle = onCall(callableOptions, (request) =>
+  authenticated(request, (uid, data) => service.createPreparedChronicle(database, uid, data)));
+
+export const patchLibraryItem = onCall(callableOptions, (request) =>
+  authenticated(request, (uid, data) => service.patchLibraryItem(database, uid, data)));
+
+export const deleteChronicle = onCall(callableOptions, (request) =>
+  authenticated(request, (uid, data) => service.deleteChronicle(database, uid, data)));

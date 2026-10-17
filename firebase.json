@@ -1,0 +1,34 @@
+{
+  "auth": {"providers": {
+    "anonymous": true,
+    "googleSignIn": {
+      "oAuthBrandDisplayName": "Öv Chronicles",
+      "supportEmail": "enkhjin@geret.mn"
+    }
+  }},
+  "functions": [{
+    "source": "functions",
+    "codebase": "ov-backend",
+    "runtime": "nodejs22",
+    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
+    "ignore": ["node_modules", "test", "*.log", ".env.local"]
+  }],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {"rules": "storage.rules"},
+  "hosting": {
+    "public": "app/build/web",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [{"source": "**", "destination": "/index.html"}]
+  },
+  "emulators": {
+    "auth": {"host": "127.0.0.1", "port": 9099},
+    "functions": {"host": "127.0.0.1", "port": 5001},
+    "firestore": {"host": "127.0.0.1", "port": 18080},
+    "storage": {"host": "127.0.0.1", "port": 9199},
+    "ui": {"enabled": false},
+    "singleProjectMode": true
+  }
+}

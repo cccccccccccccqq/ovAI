@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "demo-ov-chronicles",
+    "dev": "ov-chronicles-dev-20261016"
+  }
+}
