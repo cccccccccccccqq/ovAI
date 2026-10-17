@@ -19,3 +19,4 @@ flutter run
 ```
 
 The app now uses Firebase Authentication for Google sign-in, with Apple prepared but disabled until the developer/provider setup is complete. Stories and progress remain on this device, isolated by Firebase UID. Use AUTH_MODE=emulator for simulated social sign-in. A tested Firebase emulator backend is available separately; cloud story sync and live AI/TTS are not implemented.
+# ovAI
