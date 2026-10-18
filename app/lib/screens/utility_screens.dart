@@ -129,12 +129,12 @@ class JourneyScreen extends StatelessWidget {
             const DemoBadge(text: 'A PREPARED THREE-CHAPTER JOURNEY'),
             const SizedBox(height: 18),
             Text(
-              'Beneath the Silver Tree',
+              'The Silver Tree of Karakorum',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 12),
             const Text(
-              'Begin in Kharkhorin. Follow the apprentice or the rider, then return to the open steppe. Your saved chapters and chosen branch will appear here.',
+              'Begin in Kharkhorin with William of Rubruck in 1254. Meet the goldsmith or walk the city, then carry the Khan\'s letter west. Your saved chapters and chosen branch will appear here.',
             ),
             const SizedBox(height: 24),
             PillButton(
@@ -1027,9 +1027,23 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                               ),
                             ],
                           ),
-                        ] else
+                        ] else ...[
+                          // Stories are bundled, so reading never waits for
+                          // an install; the pack only adds offline storage.
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              onPressed: () => _read(site.id),
+                              icon: const Icon(
+                                Icons.auto_stories_outlined,
+                                size: 18,
+                              ),
+                              label: const Text('Read story'),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
                           PillButton(
-                            label: 'Install pack',
+                            label: 'Save for offline',
                             icon: Icons.download_rounded,
                             secondary: true,
                             onPressed: () => _attempt(
@@ -1037,6 +1051,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                               () => downloads.install(site.id),
                             ),
                           ),
+                        ],
                         if (downloads.errors[site.id] != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 8),

@@ -28,58 +28,58 @@
   "templates": [
     {
       "id": "silver-tree",
-      "title": "Beneath the Silver Tree",
-      "text": "Beneath the Silver Tree. Prepared demo story.\n\nThe envoy stopped where the road met the city gate. Dust lay on his cloak, and the morning wind carried the voices of people whose words he did not yet know. He loosened his grip on the letter in his sleeve.\n\nBeyond the wall, a silver tree seemed to gather the light. A young apprentice led him toward it. Every road brings a different question, she said. The envoy looked back at the open steppe and wondered which question he had carried all this way."
+      "title": "The Silver Tree of Karakorum",
+      "text": "The Silver Tree of Karakorum. A story from historical sources.\n\nIn the spring of 1254 a Flemish friar, William of Rubruck, followed the court of Möngke Khan to Karakorum. Beside the city wall stood the Khan's great palace, closed off by a high wall. Twice a year the Khan held his great drinking feasts there, and in summer nobles came from as far as two months' ride away.\n\nAt the palace entrance stood a tree made of silver by a goldsmith from Paris. Four silver lions at its roots poured mare's milk. Pipes inside the trunk carried wine, clarified mare's milk, honey mead and rice wine. When the butler called, a silver angel at the top lifted its trumpet, and the servants hidden below poured out the drinks."
     },
     {
       "id": "workshop",
-      "title": "The Goldsmith’s Lantern",
-      "text": "The Goldsmith’s Lantern. Prepared demo story.\n\nThe apprentice pushed open a workshop door. Under a small lantern, bowls, tools and unfinished shapes waited on a wooden bench. The envoy had expected a room of treasure. Instead, he found a room of patient hands.\n\nShe lifted a thin curl of metal and held it against the light. A tree begins with something small, she said. Outside, the city hurried toward evening. The envoy sat down and, for the first time in many days, let the letter rest."
+      "title": "The Goldsmith from Paris",
+      "text": "The Goldsmith from Paris. A story from historical sources.\n\nOn the road east, a woman from Metz who had been taken captive told Rubruck about a master goldsmith in Karakorum named William. He came from Paris. His family name was Buchier, his father was Laurent Buchier, and she believed a brother, Roger, still lived on the Grand Pont in Paris.\n\nIn Karakorum, Rubruck found that the goldsmith had made the silver tree for Möngke's palace. Buchier supported a young man he treated as a son, who served as an excellent interpreter. Far from France, a captive craftsman had become one of the makers of the Khan's court."
     },
     {
       "id": "river-message",
-      "title": "A Message at Dusk",
-      "text": "A Message at Dusk. Prepared demo story.\n\nAt the western gate, a rider was tightening a saddle strap. The river is still bright, she told the envoy. Walk with me until the last bend. He followed, carrying the sealed letter and a question he had not asked inside the city.\n\nThe river turned copper in the evening. Neither spoke for a while. Then the rider pointed toward the hills. A message matters, she said, but so does the person who brings it home. The envoy watched the current carry the light away."
+      "title": "A City of Four Gates",
+      "text": "A City of Four Gates. A story from historical sources.\n\nRubruck wrote that Karakorum was not even as big as the village of Saint-Denis outside Paris. It had two quarters: one of the Muslim merchants, where the markets were and where people gathered because of the court, and one of the Chinese craftsmen. Large buildings for the court's secretaries stood beside them.\n\nHe counted twelve temples of different peoples, two mosques and one Christian church at the far end of the city. A mud wall with four gates surrounded it. Millet and grain were sold at the east gate, sheep and goats at the west, oxen and carts at the south and horses at the north."
     },
     {
       "id": "steppe-return",
-      "title": "The Road Remembers",
-      "text": "The Road Remembers. Prepared demo story.\n\nAt sunrise the envoy left the city. Behind him, the gate grew smaller; ahead, the steppe opened without a line to mark its edge. He still carried a letter, but now he remembered the apprentice’s hands and the rider’s unhurried voice.\n\nHe stopped once beside the river. A bird crossed the sky, and the wind moved through the grass in a long, soft wave. He had come looking for a story worthy of a capital. He went home carrying stories small enough to share around a fire."
+      "title": "The Khan's Letter",
+      "text": "The Khan's Letter. A story from historical sources.\n\nBefore Rubruck left, Möngke's secretaries prepared a letter for King Louis of France and read it to him through an interpreter. It opened with the Khan's claim of a heavenly mandate: in Heaven there is one eternal God, and on Earth one lord, Chinggis Khan. Rubruck wrote down its meaning as well as he could.\n\nAbout two weeks after the feast of Saint John, around 8 July 1254, Rubruck took his leave. His sick companion stayed behind. Rubruck rode west through the desert to Batu's camp on the Volga, and from there continued south toward Syria."
     },
     {
       "id": "kharkhorin-notebook",
-      "title": "Notes from the Valley",
-      "text": "Notes from the Valley. Prepared demo story.\n\nI opened my notebook before writing a date. The first thing to record was the wind. It moved across the grass and pressed the page against my hand. Around me, a living town continued its ordinary morning.\n\nI drew two columns: what I could see, and what I could only imagine. The second filled faster. Before leaving, I circled the first column. A careful journey begins by knowing the difference."
+      "title": "A Debate at Karakorum",
+      "text": "A Debate at Karakorum. A story from historical sources.\n\nOn the eve of Pentecost in 1254, Möngke Khan had Christians, Muslims and Buddhists meet in Karakorum to debate their beliefs. He sent three secretaries as judges: a Christian, a Muslim and a Buddhist.\n\nA crier announced the Khan's order: no one was to quarrel, insult another or make any noise that would disturb the debate, on pain of death. Everyone fell silent. Each side had brought its most learned people, and a large crowd gathered. The Christians placed Rubruck in the middle to speak for them."
     },
     {
       "id": "erdene-bell",
-      "title": "Before the Morning Bell",
-      "text": "Before the Morning Bell. Prepared demo story.\n\nThe courtyard was quiet when the traveller arrived. A caretaker swept the path slowly, leaving a clear line through yesterday’s dust. The traveller asked where the story began. The caretaker handed him a second broom.\n\nThey worked without speaking. By the time sunlight reached the doorway, the traveller had forgotten the question he meant to ask. He listened to the sound of the bristles against stone. Some mornings, he decided, were already enough."
+      "title": "Stones from an Old Capital",
+      "text": "Stones from an Old Capital. A story from historical sources.\n\nIn 1585, Abtai Sain Khan of the Khalkha Mongols ordered a monastery built in the Orkhon Valley. He did this after meeting the Third Dalai Lama, when Tibetan Buddhism was declared the state religion. The monastery was named Erdene Zuu.\n\nThe builders took stones from the nearby ruins of Karakorum, the thirteenth-century Mongol capital. Its temple walls were painted, and the Chinese-style roofs were covered with green tiles. Abtai Sain Khan was the grandfather of Zanabazar, who later became Mongolia's first Jebtsundamba Khutuktu."
     },
     {
       "id": "erdene-notebook",
-      "title": "A Courtyard Notebook",
-      "text": "A Courtyard Notebook. Prepared demo story.\n\nMy first note was a sketch of a doorway. The second was the shape of a shadow. I had arrived with a list of things to learn, but the courtyard asked me to slow down before naming anything.\n\nI wrote that this was a visit, not a claim to understand every symbol. Some questions would need a guide and more reading. For today, I could offer attention, a quiet voice and a careful step."
+      "title": "The Wall of 108 Stupas",
+      "text": "The Wall of 108 Stupas. A story from historical sources.\n\nThe builders planned a wall like a Buddhist rosary, with 108 stupas, because 108 is a sacred number in Buddhism. That goal was probably never fully achieved. In 1688, during the wars between the Dzungars and the Khalkha, the monastery was damaged and left empty for a time.\n\nIn 1939, during the communist purges, Choibalsan ordered the monastery destroyed. Three small temples and the outer wall with its stupas survived. In 1947 the temples became museums. After 1990 the monastery was returned to the lamas, and today it is both a working monastery and a museum."
     },
     {
       "id": "tovkhon-path",
-      "title": "The Patient Path",
-      "text": "The Patient Path. Prepared demo story.\n\nThe path climbed between the trees and disappeared around another bend. The traveller counted the things still to do until a fallen pine needle landed on her sleeve. She stopped counting and looked up.\n\nLight moved over the bark. Somewhere ahead, another walker paused too. When they reached the clearing, neither asked who had arrived first. They sat together and watched the forest fill the space they had left for words."
+      "title": "Zanabazar's Hermitage",
+      "text": "Zanabazar's Hermitage. A story from historical sources.\n\nIn 1648, the fourteen-year-old Zanabazar, spiritual leader of the Khalkha Mongols, chose a place on Shireet Ulaan Uul, high on a forested ridge, as an auspicious site. He named it Bayasgalant Aglag Oron, the Happy Secluded Place.\n\nThe first buildings went up after he returned from studying in Tibet in 1653. For about thirty years Tövkhön was his personal retreat. There Zanabazar, a sculptor, painter and musician, made many of his best-known works."
     },
     {
       "id": "tovkhon-notebook",
-      "title": "A Clearing Above the Trees",
-      "text": "A Clearing Above the Trees. Prepared demo story.\n\nAt the start of the walk I wrote about distance. Higher up I wrote about breath. In the clearing I stopped measuring altogether. The notebook lay open while the trees moved in a wind I could hear before I felt it.\n\nOn the way down, the same bends looked different. I added one final line: a path is more than its destination. It is also the attention we bring back with us."
+      "title": "Where the Soyombo Was Shaped",
+      "text": "Where the Soyombo Was Shaped. A story from historical sources.\n\nIn the 1670s and 1680s, Zanabazar and his apprentices at Tövkhön made hundreds of works for the monasteries he founded. His masterworks from the mid-1680s include the White Tara and Vajradhara. In 1686 he designed the Soyombo script to help translate between Mongolian, Tibetan and Sanskrit. Its emblem later became a national symbol of Mongolia.\n\nIn 1688, Oirat forces destroyed the hermitage during their war against the Khalkha. It was restored in 1773 and badly damaged again in the purges of the late 1930s. Religious life returned in 1992, and restoration finished in 1997."
     },
     {
       "id": "waterfall-ribbon",
-      "title": "The River’s Ribbon",
-      "text": "The River’s Ribbon. Prepared demo story.\n\nThe child asked where the river kept its stories. Her grandfather pointed first upstream, then downstream, and finally to the place where they stood. She frowned. That is three answers, she said. He smiled and handed her a smooth stone.\n\nThey listened beside the water. The stone warmed in her palm. By the time they turned toward home, she had found a fourth answer: perhaps a river leaves a little of its story with everyone who stops to listen."
+      "title": "Born of Lava",
+      "text": "Born of Lava. A story from historical sources.\n\nIn the Quaternary period, a volcano erupted near the source of the Tsagaan Azarga River. Lava flowed down the Orkhon Valley and left thick layers of volcanic rock stretching for several kilometers.\n\nOver time the Orkhon River cut through these layers and made the gorge where the water now falls. The Ulaan Tsutgalan waterfall is about 24 meters high and 10 meters wide, the widest in Mongolia. Its water comes from the Orkhon River."
     },
     {
       "id": "waterfall-notebook",
-      "title": "Listening to Water",
-      "text": "Listening to Water. Prepared demo story.\n\nI took one photograph and then put the camera away. For a moment I did not try to turn the water into an image. I listened to its changing sound and watched a ribbon of mist drift across the view.\n\nLater, the photograph would help me remember where I had stood. The notebook would help me remember how it felt to stay there. I left the page unfinished, with room for a return."
+      "title": "The River of Capitals",
+      "text": "The River of Capitals. A story from historical sources.\n\nThe water that falls at Ulaan Tsutgalan flows on through a valley that served for centuries as a seat of steppe empires. In the eighth century, the Göktürk ruler Bilge Khan set up stone stelae here, carved in the Old Turkic script. The Orkhon inscriptions were rediscovered in 1889.\n\nLater the Uyghurs built their capital, Ordu-Baliq, in the same valley, and in the thirteenth century the Mongols built Karakorum. UNESCO inscribed the valley in 2004 for nomadic pastoral traditions spanning more than two thousand years."
     }
   ]
 }

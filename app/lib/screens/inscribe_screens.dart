@@ -452,7 +452,7 @@ class ToneScreen extends StatelessWidget {
           Text(
             selected.isHistorical
                 ? 'An original English synopsis of The Secret History of the Mongols. Source sections and uncertain locations are noted in the chapter.'
-                : 'Original writing inspired by the setting. Historical context is separated from imagined scenes.',
+                : 'Retold from historical sources. Each story links to the passages it draws on.',
             style: TextStyle(
               color: _mutedColor(context),
               fontSize: 13,

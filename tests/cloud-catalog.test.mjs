@@ -53,13 +53,13 @@ test('CLI defaults to local dry-run and apply must pin a reviewed manifest', () 
 
 test('full migration contains canonical editorial content and intact recordings', async () => {
   const plan = await loadCatalogPlan(root, publishedTemplate);
-  assert.equal(plan.documents.length, 39);
+  assert.equal(plan.documents.length, 47);
   assert.equal(plan.media.length, 72);
   assert.equal(plan.manifest.totals.historicalRecordings, 24);
   assert.ok(plan.manifest.totals.mediaBytes > 59000000);
   assert.equal(plan.documents.filter((item) => item.path.startsWith('chapters/')).length, 5);
   assert.equal(plan.documents.filter((item) => item.path.startsWith('storyTemplates/')).length, 17);
-  assert.equal(plan.documents.filter((item) => item.path.startsWith('sources/')).length, 9);
+  assert.equal(plan.documents.filter((item) => item.path.startsWith('sources/')).length, 17);
   assert.ok(!plan.documents.some((item) => /^(users|chronicles|generationRequests)\//.test(item.path)));
   assert.equal(plan.manifestSha256, sha256(canonicalJson(plan.manifest)));
   assert.ok(plan.manifest.media.every((item) => !('localPath' in item)));

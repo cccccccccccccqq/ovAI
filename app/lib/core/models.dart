@@ -81,7 +81,7 @@ class StorySegment {
 
   final String text;
 
-  /// `legend` is original fiction; `context` is a curated editorial note.
+  /// `legend` retells the cited source; `context` is a curated editorial note.
   final String kind;
   final String? citationId;
 }

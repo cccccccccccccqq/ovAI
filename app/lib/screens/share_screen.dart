@@ -77,7 +77,7 @@ class _ShareScreenState extends State<ShareScreen> {
               for (final segment in template.segments) ...[
                 pw.Text(
                   segment.kind == 'legend'
-                      ? 'ORIGINAL FICTION'
+                      ? 'RETOLD FROM SOURCES'
                       : 'CURATED CONTEXT',
                   style: const pw.TextStyle(
                     fontSize: 8,
@@ -276,7 +276,7 @@ class _ShareScreenState extends State<ShareScreen> {
                           Text(
                             app.templateFor(story).isHistorical
                                 ? 'SECRET HISTORY · ENGLISH SYNOPSIS'
-                                : 'ORIGINAL FICTION',
+                                : 'RETOLD FROM HISTORICAL SOURCES',
                             style: const TextStyle(
                               fontSize: 9,
                               letterSpacing: 1,
@@ -330,7 +330,7 @@ class _ShareScreenState extends State<ShareScreen> {
             ),
           const SizedBox(height: 18),
           const Text(
-            'Images and PDFs are labeled as original fiction. A copied web link opens the prepared story, without your profile or private local history.',
+            'Images and PDFs name the historical source of each story. A copied web link opens the prepared story, without your profile or private local history.',
           ),
         ],
       ),

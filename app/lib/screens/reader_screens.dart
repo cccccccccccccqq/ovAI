@@ -242,7 +242,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 DemoBadge(
                   text: template.isHistorical
                       ? 'Secret History · English synopsis'
-                      : 'Curated · original fiction',
+                      : 'Retold from historical sources',
                 ),
                 if (template.historicalScenes.isNotEmpty) ...[
                   const SizedBox(height: 18),
@@ -644,7 +644,7 @@ class _ReaderEndScreenState extends State<ReaderEndScreen> {
                 Text(
                   template.isHistorical
                       ? 'This is an original English synopsis of the events described in The Secret History of the Mongols. It is not a direct quotation or a reconstruction of exact travel routes. The reading notes identify source sections and uncertain locations.'
-                      : 'This is original writing by the öv AI editors. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or verified facts.',
+                      : 'The öv AI editors retold this story from the historical sources in the reading notes. People, dates and events follow those sources; the wording is a paraphrase, not a quotation.',
                   style: TextStyle(
                     color: OvColors.cream.withValues(alpha: .8),
                     fontSize: 13,
@@ -1040,7 +1040,7 @@ Future<void> showStorySources(
               Text(
                 template.isHistorical
                     ? 'Source sections for this original English synopsis. Places are shown as research regions where precise historical locations are uncertain.'
-                    : 'Editorial context for a work of fiction. These notes are not exact historical quotes or verified facts.',
+                    : 'The source behind this story, with page or section references. The story text paraphrases it; it is not a quotation.',
                 style: const TextStyle(
                   color: OvColors.body,
                   fontSize: 13,
