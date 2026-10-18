@@ -69,6 +69,8 @@
 
 ## 8–10. Build, metadata, илгээх
 
+TestFlight-ийн бүрэн зааврыг [TESTFLIGHT_SETUP.mn.md](TESTFLIGHT_SETUP.mn.md)-ээс харна уу. GitHub Actions build хийгээд upload хийнэ.
+
 ```bash
 flutter build ipa --release \
   --dart-define=AUTH_MODE=live \
