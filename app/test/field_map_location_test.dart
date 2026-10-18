@@ -163,7 +163,7 @@ void main() {
     expect(device.permissionChecks, 0);
     expect(device.permissionRequests, 0);
     expect(device.positionRequests, 0);
-    expect(find.text('DEMO ROUTE'), findsOneWidget);
+    expect(find.text('PREPARED ROUTE'), findsOneWidget);
 
     await _tap(tester, find.text('Use my location'));
     expect(device.permissionRequests, 1);
@@ -204,7 +204,7 @@ void main() {
 
     await _tap(
       tester,
-      find.text('Try arrival at ${fixture.state.selectedSite.name}'),
+      find.text('Preview arrival at ${fixture.state.selectedSite.name}'),
     );
     await tester.pumpAndSettle();
     // Stream cancellation completes asynchronously outside widget frame timing.
@@ -219,10 +219,10 @@ void main() {
     await tester.pump();
     fixture.router.pop();
     await tester.pumpAndSettle();
-    expect(find.text('DEMO ROUTE'), findsOneWidget);
+    expect(find.text('PREPARED ROUTE'), findsOneWidget);
     expect(find.text('DEVICE LOCATION'), findsNothing);
     expect(find.textContaining('Location accuracy:'), findsNothing);
-    expect(find.textContaining('from demo marker'), findsNWidgets(4));
+    expect(find.textContaining('from preview marker'), findsNWidgets(4));
     await _closeFieldMap(tester);
   });
 
@@ -238,7 +238,7 @@ void main() {
 
     await _tap(
       tester,
-      find.text('Try arrival at ${fixture.state.selectedSite.name}'),
+      find.text('Preview arrival at ${fixture.state.selectedSite.name}'),
     );
     await tester.pumpAndSettle();
     expect(find.text('Arrival: demo'), findsOneWidget);
@@ -248,7 +248,7 @@ void main() {
 
     fixture.router.pop();
     await tester.pumpAndSettle();
-    expect(find.text('DEMO ROUTE'), findsOneWidget);
+    expect(find.text('PREPARED ROUTE'), findsOneWidget);
     expect(find.text('DEVICE LOCATION'), findsNothing);
     expect(find.text('Use my location'), findsOneWidget);
     expect(find.textContaining('Location accuracy:'), findsNothing);
@@ -267,7 +267,7 @@ void main() {
 
     await _tap(
       tester,
-      find.text('Try arrival at ${fixture.state.selectedSite.name}'),
+      find.text('Preview arrival at ${fixture.state.selectedSite.name}'),
     );
     await tester.pumpAndSettle();
     expect(find.text('Arrival: demo'), findsOneWidget);
@@ -313,7 +313,7 @@ void main() {
 
       await _tap(
         tester,
-        find.text('Try arrival at ${fixture.state.selectedSite.name}'),
+        find.text('Preview arrival at ${fixture.state.selectedSite.name}'),
       );
       await tester.pumpAndSettle();
       expect(find.text('Arrival: demo'), findsOneWidget);

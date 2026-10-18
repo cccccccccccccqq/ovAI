@@ -138,7 +138,7 @@ class AudioController extends ChangeNotifier {
     } catch (_) {
       if (!_active(request)) return;
       loading = false;
-      error = 'Unable to load the demo recording. Try again.';
+      error = 'Unable to load the narration. Try again.';
       _emit();
     }
   }

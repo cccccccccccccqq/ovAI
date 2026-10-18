@@ -9,7 +9,7 @@ GoRoute ovRoute({
   required Widget Function(BuildContext, GoRouterState) builder,
 }) {
   final motion = switch (path) {
-    '/steppe' || '/inscribe/place' || '/scrolls' || '/orda' => OvPageMotion.tab,
+    '/steppe' || '/inscribe/place' || '/scrolls' || '/profile' => OvPageMotion.tab,
     '/share/:id' || '/geofence' => OvPageMotion.overlay,
     '/welcome' || '/writing' || '/demo/:templateId' => OvPageMotion.fade,
     _ => OvPageMotion.forward,

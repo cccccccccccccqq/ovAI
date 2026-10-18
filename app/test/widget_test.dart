@@ -188,7 +188,7 @@ void main() {
         ('/reader/${story.id}', ReaderScreen),
         ('/reader/${story.id}/end', ReaderEndScreen),
         ('/scrolls', LibraryScreen),
-        ('/orda', ProfileScreen),
+        ('/profile', ProfileScreen),
         ('/field', FieldMapScreen),
         ('/geofence', GeofenceScreen),
         ('/offline', OfflineScreen),

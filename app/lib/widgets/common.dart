@@ -172,7 +172,7 @@ class _FloatingNav extends StatelessWidget {
       ('steppe', 'Steppe', Icons.explore_outlined, '/steppe'),
       ('inscribe', 'Inscribe', Icons.edit_outlined, '/inscribe/place'),
       ('scrolls', 'Scrolls', Icons.auto_stories_outlined, '/scrolls'),
-      ('orda', 'Orda', Icons.person_outline_rounded, '/orda'),
+      ('profile', 'Profile', Icons.person_outline_rounded, '/profile'),
     ];
     final selectedIndex = items.indexWhere((item) => item.$1 == activeTab);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
@@ -368,7 +368,7 @@ class SectionHeading extends StatelessWidget {
 }
 
 class DemoBadge extends StatelessWidget {
-  const DemoBadge({super.key, this.text = 'LOCAL DEMO'});
+  const DemoBadge({super.key, this.text = 'ON THIS DEVICE'});
   final String text;
 
   @override

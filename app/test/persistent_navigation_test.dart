@@ -19,7 +19,7 @@ GoRouter _router({String initialLocation = '/steppe'}) => GoRouter(
         activeTab: switch (state.uri.path) {
           '/inscribe/place' => 'inscribe',
           '/scrolls' => 'scrolls',
-          '/orda' => 'orda',
+          '/profile' => 'profile',
           _ => 'steppe',
         },
         child: child,
@@ -29,7 +29,7 @@ GoRouter _router({String initialLocation = '/steppe'}) => GoRouter(
           '/steppe': 'steppe',
           '/inscribe/place': 'inscribe',
           '/scrolls': 'scrolls',
-          '/orda': 'orda',
+          '/profile': 'profile',
           '/field': 'field',
         }.entries)
           ovRoute(
@@ -77,7 +77,7 @@ void main() {
     final navRect = tester.getRect(_nav());
     final pageOrigin = tester.getTopLeft(_screen('steppe'));
     final iconElements = {
-      for (final name in ['steppe', 'inscribe', 'scrolls', 'orda'])
+      for (final name in ['steppe', 'inscribe', 'scrolls', 'profile'])
         name: tester.element(_icon(name)),
     };
     final iconRects = {
@@ -115,9 +115,9 @@ void main() {
     await _mount(tester, router);
     final indicatorElement = tester.element(_indicator());
     final initial = tester.getRect(_indicator());
-    final destinationX = tester.getCenter(_tab('orda')).dx;
+    final destinationX = tester.getCenter(_tab('profile')).dx;
 
-    await tester.tap(_tab('orda'));
+    await tester.tap(_tab('profile'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 70));
     final intermediate = tester.getRect(_indicator());
@@ -143,7 +143,7 @@ void main() {
     final navElement = tester.element(_nav());
     final navRect = tester.getRect(_nav());
 
-    for (final name in ['scrolls', 'orda', 'inscribe', 'steppe', 'scrolls']) {
+    for (final name in ['scrolls', 'profile', 'inscribe', 'steppe', 'scrolls']) {
       await tester.tap(_tab(name));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 35));
@@ -155,7 +155,7 @@ void main() {
 
     expect(_screen('scrolls'), findsOneWidget);
     expect(_screen('steppe'), findsNothing);
-    expect(_screen('orda'), findsNothing);
+    expect(_screen('profile'), findsNothing);
     expect(_screen('inscribe'), findsNothing);
     expect(
       tester.getCenter(_indicator()).dx,
@@ -173,17 +173,17 @@ void main() {
     final navRect = tester.getRect(_nav());
     final pageOrigin = tester.getTopLeft(_screen('steppe'));
 
-    await tester.tap(_tab('orda'));
+    await tester.tap(_tab('profile'));
     await tester.pump();
     await tester.pump();
 
     expect(tester.getRect(_nav()), navRect);
-    expect(tester.getTopLeft(_screen('orda')), pageOrigin);
+    expect(tester.getTopLeft(_screen('profile')), pageOrigin);
     expect(
       tester.getCenter(_indicator()).dx,
-      closeTo(tester.getCenter(_tab('orda')).dx, .1),
+      closeTo(tester.getCenter(_tab('profile')).dx, .1),
     );
-    final route = ModalRoute.of(tester.element(_screen('orda')))!;
+    final route = ModalRoute.of(tester.element(_screen('profile')))!;
     expect(route.transitionDuration, Duration.zero);
     expect(route.animation!.isCompleted, isTrue);
     expect(tester.takeException(), isNull);

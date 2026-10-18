@@ -203,7 +203,7 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
           final path = state.uri.path;
           final activeTab = switch (path) {
             '/inscribe/place' => 'inscribe',
-            '/orda' => 'orda',
+            '/profile' => 'profile',
             _ when path == '/scrolls' || path.startsWith('/journey') =>
               'scrolls',
             _ => 'steppe',
@@ -217,7 +217,7 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
             builder: (_, _) => const PlaceScreen(),
           ),
           ovRoute(path: '/scrolls', builder: (_, _) => const LibraryScreen()),
-          ovRoute(path: '/orda', builder: (_, _) => const ProfileScreen()),
+          ovRoute(path: '/profile', builder: (_, _) => const ProfileScreen()),
           ovRoute(path: '/field', builder: (_, _) => const FieldMapScreen()),
           ovRoute(path: '/journey', builder: (_, _) => const JourneyScreen()),
           ovRoute(
@@ -276,7 +276,7 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
             children: [
               const Icon(Icons.explore_outlined, size: 48),
               const SizedBox(height: 16),
-              const Text('That path is not in this demo.'),
+              const Text('That story is not available.'),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => context.go('/steppe'),
@@ -322,7 +322,7 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
         child: ListenableBuilder(
           listenable: widget.state,
           builder: (_, _) => MaterialApp.router(
-            title: 'Öv · Stories of the steppe',
+            title: 'öv AI · Stories of the steppe',
             debugShowCheckedModeBanner: false,
             theme: buildOvTheme(false),
             darkTheme: buildOvTheme(true),
@@ -357,9 +357,7 @@ class _OpenPreparedStoryState extends State<OpenPreparedStory> {
       if (!mounted) return;
       final app = AppScope.of(context);
       if (!app.templates.any((template) => template.id == widget.templateId)) {
-        setState(
-          () => _error = 'This prepared story is not in the demo collection.',
-        );
+        setState(() => _error = 'This story is not in the collection.');
         return;
       }
       try {

@@ -1,5 +1,5 @@
 name: ov_chronicles
-description: "Öv — a functional, local-first Orkhon Valley storytelling prototype."
+description: "öv AI — a functional, local-first Orkhon Valley storytelling prototype."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

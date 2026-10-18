@@ -8,7 +8,7 @@ Finder _screen(String name) => find.byKey(ValueKey('screen-$name'));
 GoRouter _router({String initialLocation = '/steppe'}) => GoRouter(
   initialLocation: initialLocation,
   routes: [
-    for (final name in ['steppe', 'scrolls', 'orda', 'settings'])
+    for (final name in ['steppe', 'scrolls', 'profile', 'settings'])
       ovRoute(
         path: '/$name',
         builder: (_, _) => _Screen(name: name),
@@ -121,7 +121,7 @@ void main() {
     final router = _router();
     await _mount(tester, router);
 
-    for (final path in ['/scrolls', '/orda', '/steppe', '/scrolls']) {
+    for (final path in ['/scrolls', '/profile', '/steppe', '/scrolls']) {
       router.go(path);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 40));
@@ -130,7 +130,7 @@ void main() {
 
     expect(_screen('scrolls'), findsOneWidget);
     expect(_screen('steppe'), findsNothing);
-    expect(_screen('orda'), findsNothing);
+    expect(_screen('profile'), findsNothing);
     expect(tester.getTopLeft(_screen('scrolls')), Offset.zero);
     expect(router.canPop(), isFalse);
     expect(tester.takeException(), isNull);

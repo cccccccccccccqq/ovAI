@@ -98,7 +98,7 @@ const demoCitations = <Citation>[
   ),
   Citation(
     id: "demo-editorial",
-    title: "ÖV prototype editorial note",
+    title: "öv AI prototype editorial note",
     author: "Prepared demo collection",
     page: "Content version · October 2026",
     note:

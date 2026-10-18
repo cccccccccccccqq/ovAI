@@ -89,7 +89,7 @@ class _SteppeScreenState extends State<SteppeScreen> {
         state.defaultTemplateForSite(selected.id).isHistorical;
     final eras = ['All eras', ...state.sites.map((site) => site.era).toSet()];
     return AppScaffold(
-      eyebrow: 'Öv · Stories of Mongolia',
+      eyebrow: 'öv AI · Stories of Mongolia',
       title: 'Find your story.',
       showBack: false,
       actions: [
