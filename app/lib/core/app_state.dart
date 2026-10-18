@@ -448,8 +448,11 @@ class AppState extends ChangeNotifier {
       );
     }
     final selectedVoice = parent?.voiceId ?? _draft.voiceId;
-    if (template.isHistorical || usesCloudBackend) {
-      final store = _historyStore;
+    // Guests read bundled Orkhon stories as local chronicles; signed-in
+    // readers save to the cloud and never fall back to local while offline.
+    final store = _historyStore;
+    final cloudGuest = store == null ? isGuest : store.uid.isEmpty;
+    if (template.isHistorical || (usesCloudBackend && !cloudGuest)) {
       if (store == null || _offline) {
         throw StateError(
           'Connect to the backend before preparing this chapter.',

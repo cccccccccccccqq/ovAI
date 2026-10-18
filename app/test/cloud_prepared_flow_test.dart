@@ -200,18 +200,16 @@ void main() {
   );
 
   test(
-    'cloud guest browsing cannot silently create a local or anonymous chronicle',
+    'cloud guests read bundled stories locally without creating a cloud or anonymous chronicle',
     () async {
       final store = _CloudStore()..owner = '';
       final state = await AppState.load(projectId: 'ov-ai-5ae61');
       await state.loadHistoricalCatalog(store: store);
       expect(state.sites, hasLength(5));
-      await expectLater(
-        state.createChronicle(templateId: 'silver-tree'),
-        throwsStateError,
-      );
+      final story = await state.createChronicle(templateId: 'silver-tree');
       expect(store.created, isEmpty);
-      expect(state.library, isEmpty);
+      expect(story.isRemote, isFalse);
+      expect(state.library.single.id, story.id);
     },
   );
 
