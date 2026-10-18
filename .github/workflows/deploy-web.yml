@@ -25,6 +25,10 @@ jobs:
       contents: read
       checks: write
       pull-requests: write
+    # Until the service-account secret exists, run the checks and skip deploys
+    # instead of failing the whole job.
+    env:
+      HAS_FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OV_AI_5AE61 != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -51,7 +55,7 @@ jobs:
         run: flutter build web --release --no-wasm-dry-run
 
       - name: Deploy to live site
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && env.HAS_FIREBASE_SA == 'true'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -61,10 +65,14 @@ jobs:
 
       # Forked PRs have no access to secrets, so only same-repo PRs get previews.
       - name: Deploy preview channel
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && env.HAS_FIREBASE_SA == 'true'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OV_AI_5AE61 }}
           projectId: ov-ai-5ae61
           expires: 7d
+
+      - name: Note skipped deploy
+        if: env.HAS_FIREBASE_SA != 'true'
+        run: echo "::warning::FIREBASE_SERVICE_ACCOUNT_OV_AI_5AE61 is not set; checks passed but deploy was skipped."
