@@ -9,6 +9,7 @@ import '../core/audio_controller.dart';
 import '../core/download_controller.dart';
 import '../core/models.dart';
 import '../core/theme.dart';
+import '../history/chapter_map.dart';
 import '../widgets/common.dart';
 
 Future<void> _attempt(
@@ -149,6 +150,15 @@ class JourneyScreen extends StatelessWidget {
       );
     }
     final chapters = _journeyChapters(app, root);
+    final rootTemplate = app.templateFor(root);
+    final historicalPlaceIds = chapters
+        .expand((story) => app.templateFor(story).historicalScenes)
+        .map((scene) => scene.placeId)
+        .toSet();
+    final historicalPlaces = {
+      for (final entry in app.historicalPlaces.entries)
+        if (historicalPlaceIds.contains(entry.key)) entry.key: entry.value,
+    };
     final completed = chapters
         .where((story) => story.readingProgress >= .95)
         .length;
@@ -217,11 +227,25 @@ class JourneyScreen extends StatelessWidget {
             const SizedBox(height: 12),
           ],
           const SizedBox(height: 12),
-          const DemoMap(compact: true),
+          if (rootTemplate.isHistorical && historicalPlaces.isNotEmpty)
+            SizedBox(
+              height: 240,
+              child: ChapterMap(
+                places: historicalPlaces,
+                selectedPlaceId:
+                    rootTemplate.historicalScenes.firstOrNull?.placeId,
+                follow: false,
+                onUserPan: () {},
+              ),
+            )
+          else
+            const DemoMap(compact: true),
           const SizedBox(height: 12),
-          const Text(
-            'Illustrated Orkhon overview. Story chapters use their saved place; this is not a recorded travel route.',
-            style: TextStyle(fontSize: 12),
+          Text(
+            rootTemplate.isHistorical
+                ? 'Research regions for your saved chapters. These areas are not a reconstructed travel route.'
+                : 'Illustrated Orkhon overview. Story chapters use their saved place; this is not a recorded travel route.',
+            style: const TextStyle(fontSize: 12),
           ),
         ],
       ),
@@ -585,21 +609,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _resetting = false;
 
   Future<void> _reset() async {
+    final cloud = AppScope.of(context).usesCloudBackend;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset this demo?'),
-        content: const Text(
-          'This removes saved stories, profile, queued drafts, installed demo pack files and settings from this device.',
+        title: Text(cloud ? 'Reset this device?' : 'Reset this demo?'),
+        content: Text(
+          cloud
+              ? 'Clear downloaded packs, drafts, saved places and reading settings from this device. Stories and progress saved to your account will remain.'
+              : 'This removes saved stories, profile, queued drafts, installed demo pack files and settings from this device.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep my demo'),
+            child: Text(cloud ? 'Keep my settings' : 'Keep my demo'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Reset demo'),
+            child: Text(cloud ? 'Reset device' : 'Reset demo'),
           ),
         ],
       ),
@@ -652,7 +679,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const DemoBadge(text: 'SAVED ON THIS DEVICE'),
+          DemoBadge(
+            text: app.usesCloudBackend
+                ? 'READING SETTINGS · ON THIS DEVICE'
+                : 'SAVED ON THIS DEVICE',
+          ),
           const SizedBox(height: 20),
           Card(
             margin: EdgeInsets.zero,
@@ -679,7 +710,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         Text(
                           auth?.isSignedIn == true
-                              ? 'Account library · device storage'
+                              ? app.usesCloudBackend
+                                    ? 'Stories saved to your account'
+                                    : 'Account library · device storage'
                               : 'Guest profile · device storage',
                           style: const TextStyle(fontSize: 12),
                         ),
@@ -782,9 +815,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           SwitchListTile.adaptive(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Demo offline mode'),
-            subtitle: const Text(
-              'Try the queue and explicit resume flow. Prepared stories remain readable.',
+            title: Text(
+              app.usesCloudBackend ? 'Offline mode' : 'Demo offline mode',
+            ),
+            subtitle: Text(
+              app.usesCloudBackend
+                  ? 'Read saved stories and keep new drafts on this device until you are online.'
+                  : 'Try the queue and explicit resume flow. Prepared stories remain readable.',
             ),
             value: app.offline,
             onChanged: _resetting
@@ -801,13 +838,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 28),
           const SectionHeading(title: 'About this prototype'),
-          const Text(
-            'ÖV · v0.1\nPrepared editorial stories and system narration. Profiles, stories and progress are stored locally. AI generation and account sync are planned for a later version.',
+          Text(
+            app.usesCloudBackend
+                ? 'ÖV · v0.1\nPrepared stories and recorded narration. Stories and reading progress are saved to your account. Reading settings, drafts, saved places and downloads stay on this device.'
+                : 'ÖV · v0.1\nPrepared editorial stories and system narration. Profiles, stories and progress are stored locally. AI generation and account sync are planned for a later version.',
             style: TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 26),
           PillButton(
-            label: 'Reset local demo',
+            label: app.usesCloudBackend
+                ? 'Reset device settings'
+                : 'Reset local demo',
             icon: Icons.restart_alt_rounded,
             secondary: true,
             busy: _resetting,
@@ -1071,7 +1112,11 @@ class _OfflineScreenState extends State<OfflineScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const DemoBadge(text: 'EXPLICIT LOCAL DEMO QUEUE'),
+          DemoBadge(
+            text: app.usesCloudBackend
+                ? 'DRAFTS ON THIS DEVICE'
+                : 'EXPLICIT LOCAL DEMO QUEUE',
+          ),
           const SizedBox(height: 20),
           Card(
             margin: EdgeInsets.zero,
@@ -1083,12 +1128,18 @@ class _OfflineScreenState extends State<OfflineScreen> {
                 color: OvColors.gold,
               ),
               title: Text(
-                app.offline
+                app.usesCloudBackend
+                    ? app.offline
+                          ? 'Offline mode is on'
+                          : 'Offline mode is off'
+                    : app.offline
                     ? 'Demo offline mode is on'
                     : 'Demo offline mode is off',
               ),
-              subtitle: const Text(
-                'This switch simulates connection state. Stories are prepared on this device.',
+              subtitle: Text(
+                app.usesCloudBackend
+                    ? 'Read saved stories offline. Turn this off before saving a new chronicle to your account.'
+                    : 'This switch simulates connection state. Stories are prepared on this device.',
               ),
               value: app.offline,
               onChanged: _resumingId != null

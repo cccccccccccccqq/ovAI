@@ -88,10 +88,10 @@ flutter run -d <android-device-id> --dart-define-from-file=.maps-android.local.j
 
 Google Maps-ийг ашиглах нь Firebase Auth-ийн сонголтоос тусдаа. Default app live
 Auth ашигладаг. Local Firebase Auth emulator хэрэгтэй бол тухайн run команддаа
-`--dart-define=AUTH_MODE=emulator` нэмж, emulator-уудаа урьдчилан асаана.
+`--dart-define=BACKEND_MODE=emulator --dart-define=AUTH_MODE=emulator` нэмж, emulator-уудаа урьдчилан асаана.
 
 ```sh
-flutter run -d chrome --dart-define-from-file=.maps-web.local.json --dart-define=AUTH_MODE=emulator
+flutter run -d chrome --dart-define-from-file=.maps-web.local.json --dart-define=BACKEND_MODE=emulator --dart-define=AUTH_MODE=emulator
 ```
 
 Key-ийн файл эсвэл define байхгүй build нь одоогийн OpenStreetMap сонголтыг

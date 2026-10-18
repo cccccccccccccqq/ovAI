@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "secret-history-de-rachewiltz-2015",
+      "title": "The Secret History of the Mongols: A Mongolian Epic Chronicle of the Thirteenth Century (Shorter Version)",
+      "translator": "Igor de Rachewiltz",
+      "editor": "John C. Street",
+      "publisher": "Western Washington University, CEDAR",
+      "publicationDate": "2015-12-11",
+      "url": "https://cedar.wwu.edu/cedarbooks/4/",
+      "doi": "10.25710/31qa-rh81",
+      "sourceLicense": "CC BY-NC-ND 4.0",
+      "contentKind": "source-metadata",
+      "usageNote": "The app publishes original English editorial synopses with section references, not the full translation. The source PDF and extracted full text are not uploaded by this migration.",
+      "usedSections": {"start": 59, "end": 93},
+      "seriesIds": ["temujin-childhood-en"]
+    }
+  ]
+}

@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'auth/auth_scope.dart';
 import 'auth/social_auth.dart';
+import 'backend/backend_configuration.dart';
 import 'core/app_scope.dart';
 import 'core/app_state.dart';
 import 'core/audio_controller.dart';
 import 'core/download_controller.dart';
 import 'core/navigation_motion.dart';
 import 'core/theme.dart';
+import 'core/startup_location.dart';
 import 'screens/discovery_screens.dart';
 import 'screens/entry_screens.dart';
 import 'screens/inscribe_screens.dart';
@@ -22,12 +25,11 @@ import 'widgets/common.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  const mode = String.fromEnvironment('AUTH_MODE', defaultValue: 'live');
-  if (mode != 'live' && mode != 'emulator') {
-    throw StateError('AUTH_MODE must be live or emulator.');
-  }
+  // Capture before the loading MaterialApp can report its temporary '/' route.
+  final startupLocation = kIsWeb ? webStartupLocation(Uri.base) : null;
+  final backend = BackendConfiguration.current;
   final auth = SocialAuthController(
-    mode == 'emulator'
+    backend.isEmulator
         ? FirebaseAuthGateway.emulator(
             emulatorHost: const String.fromEnvironment(
               'FIREBASE_EMULATOR_HOST',
@@ -37,14 +39,32 @@ Future<void> main() async {
         : FirebaseAuthGateway.live(),
   );
   await auth.initialize();
-  runApp(OvSessionApp(auth: auth));
+  runApp(
+    OvSessionApp(
+      auth: auth,
+      startupLocation: startupLocation,
+      historicalCatalogEnabled: true,
+      cloudProjectId: backend.isEmulator
+          ? null
+          : BackendConfiguration.cloudProjectId,
+    ),
+  );
 }
 
 /// Replaces the full reader/player/navigation tree when the account changes.
 /// Local caches are selected by verified Firebase UID, never an entered name.
 class OvSessionApp extends StatefulWidget {
-  const OvSessionApp({super.key, required this.auth});
+  const OvSessionApp({
+    super.key,
+    required this.auth,
+    this.startupLocation,
+    this.historicalCatalogEnabled = false,
+    this.cloudProjectId,
+  });
   final SocialAuthController auth;
+  final String? startupLocation;
+  final bool historicalCatalogEnabled;
+  final String? cloudProjectId;
 
   @override
   State<OvSessionApp> createState() => _OvSessionAppState();
@@ -54,6 +74,7 @@ class _OvSessionAppState extends State<OvSessionApp> {
   late String _sessionKey;
   late Future<AppState> _state;
   bool _signedOut = false;
+  bool _useStartupLocation = true;
 
   String get _currentKey => widget.auth.isSignedIn
       ? jsonEncode([
@@ -63,16 +84,23 @@ class _OvSessionAppState extends State<OvSessionApp> {
         ])
       : 'guest';
 
-  Future<AppState> _loadState() {
+  Future<AppState> _loadState() async {
     final identity = widget.auth.identity;
+    final AppState state;
     if (widget.auth.isSignedIn && identity != null) {
-      return AppState.loadForAccount(
+      state = await AppState.loadForAccount(
         uid: identity.uid,
         displayName: identity.displayName,
         environment: widget.auth.isEmulator ? 'emulator' : 'live',
+        projectId: widget.cloudProjectId,
       );
+    } else {
+      state = await AppState.load(projectId: widget.cloudProjectId);
     }
-    return AppState.load();
+    if (widget.historicalCatalogEnabled) {
+      await state.loadHistoricalCatalog();
+    }
+    return state;
   }
 
   @override
@@ -87,6 +115,7 @@ class _OvSessionAppState extends State<OvSessionApp> {
     final nextKey = _currentKey;
     if (!mounted || nextKey == _sessionKey) return;
     setState(() {
+      _useStartupLocation = false;
       _signedOut = nextKey == 'guest';
       _sessionKey = nextKey;
       _state = _loadState();
@@ -121,7 +150,7 @@ class _OvSessionAppState extends State<OvSessionApp> {
               body: Center(
                 child: FilledButton(
                   onPressed: () => setState(() => _state = _loadState()),
-                  child: const Text('Retry loading your local library'),
+                  child: const Text('Retry loading your library'),
                 ),
               ),
             ),
@@ -131,7 +160,9 @@ class _OvSessionAppState extends State<OvSessionApp> {
         return OvApp(
           key: ValueKey(_sessionKey),
           state: state,
-          initialLocation: widget.auth.isSignedIn
+          initialLocation: _useStartupLocation && widget.startupLocation != null
+              ? widget.startupLocation
+              : widget.auth.isSignedIn
               ? '/steppe'
               : !_signedOut && state.isGuest
               ? '/steppe'
@@ -154,6 +185,7 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
   late final AudioController _audio = AudioController(widget.state);
   late final DownloadController _downloads = DownloadController(widget.state);
   late final GoRouter _router = GoRouter(
+    overridePlatformDefaultLocation: widget.initialLocation != null,
     initialLocation:
         widget.initialLocation ??
         (widget.state.profileName != null || widget.state.isGuest
@@ -194,6 +226,12 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
                 JourneyScreen(id: state.pathParameters['id']),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/history/:id',
+        redirect: (_, state) => state.pathParameters['id'] == 'onon-child'
+            ? '/demo/onon-child-en'
+            : '/steppe',
       ),
       ovRoute(path: '/inscribe/tone', builder: (_, _) => const ToneScreen()),
       ovRoute(path: '/inscribe/voice', builder: (_, _) => const VoiceScreen()),
@@ -325,7 +363,13 @@ class _OpenPreparedStoryState extends State<OpenPreparedStory> {
         return;
       }
       try {
-        final story = await app.createChronicle(templateId: widget.templateId);
+        final template = app.templateById(widget.templateId);
+        await app.selectSite(template.siteId);
+        final existing = app.library
+            .where((story) => story.templateId == template.id)
+            .firstOrNull;
+        final story =
+            existing ?? await app.createChronicle(templateId: template.id);
         if (mounted) context.go('/reader/${story.id}');
       } catch (_) {
         if (mounted) setState(() => _error = 'The story could not be opened.');

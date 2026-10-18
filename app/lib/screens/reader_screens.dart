@@ -9,6 +9,8 @@ import '../core/app_scope.dart';
 import '../core/audio_controller.dart';
 import '../core/models.dart';
 import '../core/theme.dart';
+import '../history/chapter_map.dart';
+import '../history/chapter_models.dart';
 import '../widgets/common.dart';
 
 class ReaderScreen extends StatefulWidget {
@@ -70,7 +72,12 @@ class _ReaderScreenState extends State<ReaderScreen> {
         );
       });
       _positionSubscription = audio.player.positionStream.listen((position) {
-        if (!mounted || audio.currentStoryId != storyId) return;
+        if (!mounted ||
+            audio.currentStoryId != storyId ||
+            audio.loading ||
+            audio.error != null) {
+          return;
+        }
         _positionMs = position.inMilliseconds;
         _scheduleSave();
       });
@@ -232,7 +239,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                const DemoBadge(text: 'Curated demo · original fiction'),
+                DemoBadge(
+                  text: template.isHistorical
+                      ? 'Secret History · English synopsis'
+                      : 'Curated demo · original fiction',
+                ),
+                if (template.historicalScenes.isNotEmpty) ...[
+                  const SizedBox(height: 18),
+                  _ReaderChapterMap(story: story, template: template),
+                ],
                 const SizedBox(height: 26),
                 for (final segment in template.segments) ...[
                   if (segment.kind == 'context')
@@ -284,6 +299,137 @@ class _ReaderScreenState extends State<ReaderScreen> {
             ),
           ),
           ChronicleAudioPlayer(story: story),
+        ],
+      ),
+    );
+  }
+}
+
+/// The historical map lives inside the shared reader and follows its player.
+/// Panning only releases the camera; it never pauses narration.
+class _ReaderChapterMap extends StatefulWidget {
+  const _ReaderChapterMap({required this.story, required this.template});
+  final Chronicle story;
+  final StoryTemplate template;
+
+  @override
+  State<_ReaderChapterMap> createState() => _ReaderChapterMapState();
+}
+
+class _ReaderChapterMapState extends State<_ReaderChapterMap> {
+  bool _expanded = false;
+  bool _follow = true;
+  String? _selectedPlaceId;
+
+  @override
+  void didUpdateWidget(covariant _ReaderChapterMap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.story.id != widget.story.id) {
+      _selectedPlaceId = null;
+      _follow = true;
+    }
+  }
+
+  HistoricalScene _sceneAt(int positionMs) {
+    for (final scene in widget.template.historicalScenes.reversed) {
+      if (positionMs >= scene.startMs) return scene;
+    }
+    return widget.template.historicalScenes.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final app = AppScope.of(context);
+    final audio = AudioScope.of(context);
+    final placeIds = widget.template.historicalScenes
+        .map((scene) => scene.placeId)
+        .toSet();
+    final places = {
+      for (final entry in app.historicalPlaces.entries)
+        if (placeIds.contains(entry.key)) entry.key: entry.value,
+    };
+    if (places.isEmpty) return const SizedBox.shrink();
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        key: ValueKey('chapter-map-${widget.story.id}'),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 14),
+        childrenPadding: const EdgeInsets.fromLTRB(10, 0, 10, 14),
+        collapsedBackgroundColor: const Color(0xff142c1e),
+        backgroundColor: const Color(0xff142c1e),
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        iconColor: OvColors.gold,
+        collapsedIconColor: OvColors.gold,
+        leading: const Icon(Icons.map_outlined, color: OvColors.gold),
+        title: const Text(
+          'Explore the chapter map',
+          style: TextStyle(color: OvColors.cream, fontSize: 14),
+        ),
+        onExpansionChanged: (value) => setState(() => _expanded = value),
+        children: [
+          if (_expanded)
+            StreamBuilder<Duration>(
+              stream: audio.player.positionStream,
+              initialData: Duration(milliseconds: widget.story.audioPositionMs),
+              builder: (context, snapshot) {
+                final positionMs = audio.currentStoryId == widget.story.id
+                    ? snapshot.data?.inMilliseconds ?? 0
+                    : widget.story.audioPositionMs;
+                final scene = _sceneAt(positionMs);
+                final selected = _follow
+                    ? scene.placeId
+                    : _selectedPlaceId ?? scene.placeId;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: 260,
+                      child: ChapterMap(
+                        places: places,
+                        selectedPlaceId: selected,
+                        follow: _follow,
+                        onUserPan: () {
+                          if (!_follow) return;
+                          setState(() {
+                            _selectedPlaceId = scene.placeId;
+                            _follow = false;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      scene.caption,
+                      style: TextStyle(
+                        color: OvColors.cream.withValues(alpha: .8),
+                        fontSize: 12,
+                        height: 1.5,
+                      ),
+                    ),
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      activeTrackColor: OvColors.green,
+                      title: const Text(
+                        'Follow the narration',
+                        style: TextStyle(color: OvColors.cream, fontSize: 13),
+                      ),
+                      subtitle: Text(
+                        'Explore freely while the audio continues.',
+                        style: TextStyle(
+                          color: OvColors.cream.withValues(alpha: .6),
+                          fontSize: 11,
+                        ),
+                      ),
+                      value: _follow,
+                      onChanged: (value) => setState(() => _follow = value),
+                    ),
+                  ],
+                );
+              },
+            ),
         ],
       ),
     );
@@ -368,7 +514,11 @@ class _ReaderEndScreenState extends State<ReaderEndScreen> {
           ),
           const SizedBox(height: 18),
           Text(
-            template.segments.where((item) => item.kind == 'legend').last.text,
+            template.segments
+                    .where((item) => item.kind != 'context')
+                    .lastOrNull
+                    ?.text ??
+                template.subtitle,
             style: TextStyle(
               fontSize: 17,
               height: 1.8,
@@ -393,6 +543,8 @@ class _ReaderEndScreenState extends State<ReaderEndScreen> {
           Text(
             paths.isEmpty
                 ? 'Your chapter is in your scrolls. Revisit it any time, or begin a new chronicle.'
+                : template.isHistorical
+                ? 'Continue the story. The next chapter stays linked to this one in your journey.'
                 : 'Follow one of the prepared branches. Your choice becomes the next chapter in your journey.',
             style: TextStyle(
               color: OvColors.cream.withValues(alpha: .6),
@@ -490,7 +642,9 @@ class _ReaderEndScreenState extends State<ReaderEndScreen> {
                 const DemoBadge(text: 'About this story'),
                 const SizedBox(height: 12),
                 Text(
-                  'This is original writing prepared for the ÖV prototype. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or live AI verification.',
+                  template.isHistorical
+                      ? 'This is an original English synopsis of the events described in The Secret History of the Mongols. It is not a direct quotation or a reconstruction of exact travel routes. The reading notes identify source sections and uncertain locations.'
+                      : 'This is original writing prepared for the ÖV prototype. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or live AI verification.',
                   style: TextStyle(
                     color: OvColors.cream.withValues(alpha: .8),
                     fontSize: 13,
@@ -639,7 +793,7 @@ class ChronicleAudioPlayer extends StatelessWidget {
                               ),
                               const SizedBox(height: 3),
                               Text(
-                                '${app.voiceById(story.voiceId).name} · recorded demo',
+                                '${app.voiceById(story.voiceId).name} · ${app.templateFor(story).isHistorical ? 'English narration' : 'recorded demo'}',
                                 style: TextStyle(
                                   color: OvColors.cream.withValues(alpha: .55),
                                   fontSize: 11,
@@ -883,9 +1037,11 @@ Future<void> showStorySources(
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Prepared editorial context for a fictional demo story. These notes are not exact historical quotes, and no live verification was performed.',
-                style: TextStyle(
+              Text(
+                template.isHistorical
+                    ? 'Source sections for this original English synopsis. Places are shown as research regions where precise historical locations are uncertain.'
+                    : 'Prepared editorial context for a fictional demo story. These notes are not exact historical quotes, and no live verification was performed.',
+                style: const TextStyle(
                   color: OvColors.body,
                   fontSize: 13,
                   height: 1.6,
@@ -1075,7 +1231,7 @@ class _MissingStory extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'This local chronicle was removed or is not saved on this device.',
+          'This chronicle was removed or is not available in your current library.',
         ),
         const SizedBox(height: 24),
         PillButton(

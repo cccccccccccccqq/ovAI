@@ -4,8 +4,8 @@ import { after, test } from "node:test";
 import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
-import { preparedFixture } from "./fixture.js";
-import { preparedUsageKey } from "../src/domain.js";
+import { historicalFixture, preparedFixture } from "./fixture.js";
+import { preparedUsageKey, requestKey } from "../src/domain.js";
 
 const hasEmulators = Boolean(process.env.FIRESTORE_EMULATOR_HOST && process.env.FIREBASE_AUTH_EMULATOR_HOST);
 const projectId = process.env.GCLOUD_PROJECT ?? "demo-ov-chronicles";
@@ -58,6 +58,58 @@ async function call(name: string, data: unknown, token?: string): Promise<{ resu
   if (!json.error) assert.equal(response.status, 200, JSON.stringify(json));
   return json;
 }
+
+test("historical paths persist source metadata, parent choice and voice with private playback progress", {
+  skip: hasEmulators ? false : "Run with the local auth, firestore and functions emulators.",
+}, async () => {
+  assert.ok(db);
+  const alice = await signIn();
+  const bob = await signIn();
+  const first = `history-first-${randomUUID()}`;
+  const second = `history-second-${randomUUID()}`;
+  const unrelated = `history-other-${randomUUID()}`;
+  for (const id of [first, second, unrelated]) createdDocuments.push(`storyTemplates/${id}`);
+  await db.doc(`storyTemplates/${first}`).set({ ...historicalFixture(first), nextIds: [second] });
+  await db.doc(`storyTemplates/${second}`).set({ ...historicalFixture(second), chapter: 2, nextIds: [] });
+  await db.doc(`storyTemplates/${unrelated}`).set(historicalFixture(unrelated));
+  const create = async (templateId: string, options: { parentId?: string; voiceId?: string } = {}) => {
+    const requestId = randomUUID();
+    const key = requestKey(alice.uid, requestId);
+    const chronicleId = `chr_${key}`;
+    createdDocuments.push(`chronicles/${chronicleId}`, `users/${alice.uid}/library/${chronicleId}`, `generationRequests/${key}`);
+    const input = { requestId, templateId, voiceId: options.voiceId ?? "samantha", ...(options.parentId ? { parentId: options.parentId } : {}) };
+    return { input, response: await call("createPreparedChronicle", input, alice.token) };
+  };
+  const opened = await create(first);
+  assert.ok(opened.response.result, JSON.stringify(opened.response));
+  const firstId = opened.response.result.chronicleId;
+  const snapshot = await db.doc(`chronicles/${firstId}`).get();
+  assert.equal(snapshot.get("contentKind"), "historical-synopsis");
+  assert.equal(snapshot.get("segments")[0].kind, "history");
+  assert.equal(snapshot.get("durationMs"), 240_000);
+  assert.equal(snapshot.get("seriesId"), "temujin-childhood-en");
+  assert.deepEqual(snapshot.get("sourceSections"), [59, 60, 61, 62, 63, 64, 65, 66]);
+  assert.equal(snapshot.get("scenes")[1].endMs, 240_000);
+  assert.equal((await create(unrelated, { parentId: firstId })).response.error?.status, "INVALID_ARGUMENT");
+  assert.equal((await create(second, { parentId: firstId, voiceId: "daniel" })).response.error?.status, "INVALID_ARGUMENT");
+  assert.equal((await call("createPreparedChronicle", { requestId: randomUUID(), templateId: second, voiceId: "samantha", parentId: firstId }, bob.token)).error?.status, "PERMISSION_DENIED");
+  const continued = await create(second, { parentId: firstId });
+  assert.ok(continued.response.result, JSON.stringify(continued.response));
+  const secondId = continued.response.result.chronicleId;
+  assert.equal((await db.doc(`chronicles/${secondId}`).get()).get("parentId"), firstId);
+  assert.equal((await db.doc(`users/${alice.uid}/library/${secondId}`).get()).get("parentId"), firstId);
+  assert.equal((await call("createPreparedChronicle", continued.input, alice.token)).result?.replayed, true);
+  assert.equal((await call("patchLibraryItem", { chronicleId: secondId, audioPositionMs: 240_001 }, alice.token)).error?.status, "INVALID_ARGUMENT");
+  await call("patchLibraryItem", { chronicleId: secondId, audioPositionMs: 92_000, bookmarked: true }, alice.token);
+  const library = await db.doc(`users/${alice.uid}/library/${secondId}`).get();
+  assert.equal(library.get("audioPositionMs"), 92_000);
+  assert.equal(library.get("bookmarked"), true);
+  // A later editorial update does not alter an account's captured narration,
+  // source references, audio duration or the selected journey edge.
+  await db.doc(`storyTemplates/${second}`).update({ contentVersion: 2, sourceSections: [67] });
+  assert.equal((await db.doc(`chronicles/${secondId}`).get()).get("contentVersion"), 1);
+  assert.deepEqual((await db.doc(`chronicles/${secondId}`).get()).get("sourceSections"), [59, 60, 61, 62, 63, 64, 65, 66]);
+});
 
 test("real callable functions enforce ownership, immutable snapshots and atomic replay", {
   skip: hasEmulators ? false : "Run through firebase emulators:exec with auth, firestore, functions.",

@@ -1,6 +1,11 @@
 # Öv Firebase backend — эхний суурь
 
-Огноо: 2026-10-16.
+> **2026-10-18:** Одоогийн target нь `ov-ai-5ae61`, default mode нь `BACKEND_MODE=cloud`. [Cloud шилжүүлэлтийн бодит төлөв](CLOUD_MIGRATION_STATUS.mn.md)-ийг үзнэ үү. Доорх хуучин dev/emulator setup нь өмнөх үеийн тайлбар; Storage/Functions болон catalog publish нь billing хүлээж байна.
+
+
+Огноо: 2026-10-17.
+
+Англи түүхэн цувралын нэмэлт: Onon River нь Kharkhorin-той ижил place card → Place/Tone/Voice → Reader/Player → next path урсгалыг ашиглана. Нийт таван chronological chapter, Chapter 1-ийн хоёр өөр tone, дөрвөн narrator-ийн 24 ширхэг 4 минутын аудио бэлэн. `createPreparedChronicle`, `patchLibraryItem`, `deleteChronicle` нь local Firebase-д immutable content snapshot, parent path, bookmark/progress хадгална. Нэвтрэлтийн үндсэн account namespace бүр тусдаа local anonymous Firebase session-тэй; live Google cloud sync биш. [Ажиллуулах ба шалгах](SECRET_HISTORY_ENGLISH.mn.md). Хуучин Kharkhorin demo хадгалалт хэвээр.
 
 ## Одоо хэрэгжсэн зүйлс
 

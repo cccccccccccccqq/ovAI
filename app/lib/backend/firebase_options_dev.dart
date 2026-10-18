@@ -1,18 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
-/// Public SDK configuration downloaded for the registered development apps.
-///
-/// Importing this file does not initialize Firebase or switch the prototype
-/// to cloud data. Pass [currentPlatform] explicitly when initializing live mode.
-/// The configured Storage bucket is not provisioned yet; Blaze setup is required
-/// before provisioning it and uploading media. Its name alone is not ready media.
+/// Public Firebase SDK settings for the registered ov-ai-5ae61 cloud apps.
+/// Service credentials and App Check debug tokens are never stored here.
 class DevFirebaseOptions {
   DevFirebaseOptions._();
-
-  /// Public OAuth web client created when Google sign-in was enabled.
   static const googleWebClientId =
-      '146324418677-46lvrnt931s8vvfdhn0nr8ir9m91it1h.apps.googleusercontent.com';
+      "765364993612-pri91hps3u92lghntnobpiog5a0ccr2m.apps.googleusercontent.com";
 
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) return web;
@@ -20,36 +14,36 @@ class DevFirebaseOptions {
       TargetPlatform.android => android,
       TargetPlatform.iOS => ios,
       _ => throw UnsupportedError(
-        'DevFirebaseOptions supports Web, Android, and iOS only. '
-        'Register this platform before connecting it to Firebase.',
+        'Register this platform with Firebase first.',
       ),
     };
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAxxYmoeSNexV8U3zNPVL8k3tCk-ZkCXgM',
-    appId: '1:146324418677:web:c41dbceb31c607c726883c',
-    messagingSenderId: '146324418677',
-    projectId: 'ov-chronicles-dev-20261016',
-    authDomain: 'ov-chronicles-dev-20261016.firebaseapp.com',
-    storageBucket: 'ov-chronicles-dev-20261016.firebasestorage.app',
+    apiKey: "AIzaSyC23su6oWv1BquNY48r0N_yY9alEsBrmtA",
+    appId: "1:765364993612:web:f719ddc9380301a12bbee9",
+    messagingSenderId: "765364993612",
+    projectId: "ov-ai-5ae61",
+    storageBucket: "ov-ai-5ae61.firebasestorage.app",
+    authDomain: "ov-ai-5ae61.firebaseapp.com",
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAvq0G0a60n6Uk1sE0_XF82jOSBRdb0cLQ',
-    appId: '1:146324418677:android:88233851f333685326883c',
-    messagingSenderId: '146324418677',
-    projectId: 'ov-chronicles-dev-20261016',
-    storageBucket: 'ov-chronicles-dev-20261016.firebasestorage.app',
+    apiKey: "AIzaSyAmENznH0qsYBEv0Qh7GQoE7eyRl9TLxCU",
+    appId: "1:765364993612:android:7c51dd78f0b205622bbee9",
+    messagingSenderId: "765364993612",
+    projectId: "ov-ai-5ae61",
+    storageBucket: "ov-ai-5ae61.firebasestorage.app",
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBhuZvvYHSDIUL4K2szGNhnNOT9PiSUbUI',
-    appId: '1:146324418677:ios:fc032e81d896422526883c',
-    messagingSenderId: '146324418677',
-    projectId: 'ov-chronicles-dev-20261016',
-    storageBucket: 'ov-chronicles-dev-20261016.firebasestorage.app',
-    iosBundleId: 'mn.ov.ovChronicles',
-    iosClientId: '146324418677-90pcdvfro47atm56p67kbn40ipmq88fi.apps.googleusercontent.com',
+    apiKey: "AIzaSyCXbCD14W3IsulaDb9UfG6fZEsmQJP4t88",
+    appId: "1:765364993612:ios:f8a6ce21c5f7cd982bbee9",
+    messagingSenderId: "765364993612",
+    projectId: "ov-ai-5ae61",
+    storageBucket: "ov-ai-5ae61.firebasestorage.app",
+    iosBundleId: "mn.ov.ovChronicles",
+    iosClientId:
+        "765364993612-buhd7rrhm3cmmm0p3v5g1jhs0r5nshd4.apps.googleusercontent.com",
   );
 }

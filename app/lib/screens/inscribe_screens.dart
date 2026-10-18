@@ -450,7 +450,9 @@ class ToneScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Original demo writing inspired by the setting. Historical context is separated from imagined scenes.',
+            selected.isHistorical
+                ? 'An original English synopsis of The Secret History of the Mongols. Source sections and uncertain locations are noted in the chapter.'
+                : 'Original demo writing inspired by the setting. Historical context is separated from imagined scenes.',
             style: TextStyle(
               color: _mutedColor(context),
               fontSize: 13,
@@ -686,7 +688,7 @@ class _WritingScreenState extends State<WritingScreen> {
       _stage = 0;
     });
     try {
-      // These are local preparation steps; no network or AI verification occurs.
+      // The shared preparation flow opens curated content, never live AI text.
       for (var step = 0; step < 3; step++) {
         await Future<void>.delayed(const Duration(milliseconds: 420));
         if (!mounted || token != _token) return;
@@ -701,7 +703,7 @@ class _WritingScreenState extends State<WritingScreen> {
         setState(() {
           _running = false;
           _error =
-              'Your chronicle could not be saved on this device. Try again, or return to your draft.';
+              'Your chronicle could not be saved. Try again, or return to your draft.';
         });
       }
     }
@@ -776,7 +778,7 @@ class _WritingScreenState extends State<WritingScreen> {
             for (final (index, title) in [
               'Opening the prepared story',
               'Matching your selected narrator',
-              'Saving to your local scrolls',
+              'Saving to your scrolls',
             ].indexed)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),

@@ -12,7 +12,7 @@ import {
   requestKey,
   preparedUsageKey,
 } from "../src/domain.js";
-import { preparedFixture } from "./fixture.js";
+import { historicalFixture, preparedFixture } from "./fixture.js";
 
 function invalid(operation: () => unknown): void {
   assert.throws(operation, (error) => error instanceof DomainError && error.code === "invalid-argument");
@@ -72,6 +72,10 @@ test("request identity is scoped to an account and preserves boundaries", () => 
   assert.notEqual(requestKey("ab", "c"), requestKey("a", "bc"));
   assert.match(requestKey("u", "r"), /^[a-f0-9]{64}$/u);
   assert.notEqual(payloadHash({ templateId: "t", voiceId: "v" }), payloadHash({ templateId: "t", voiceId: "other" }));
+  assert.notEqual(payloadHash({ templateId: "t", voiceId: "v" }), payloadHash({ templateId: "t", voiceId: "v", parentId: "parent" }));
+  assert.notEqual(payloadHash({ templateId: "t", voiceId: "v", parentId: "a" }), payloadHash({ templateId: "t", voiceId: "v", parentId: "b" }));
+  assert.equal(parsePreparedInput({ requestId: "r", templateId: "t", voiceId: "v", parentId: "chr_parent" }).parentId, "chr_parent");
+  invalid(() => parsePreparedInput({ requestId: "r", templateId: "t", voiceId: "v", parentId: "../other" }));
 });
 
 test("prepared copy quota counts to 100 and uses account plus UTC day", () => {
@@ -122,6 +126,40 @@ test("server content validation rejects forged kinds, unsafe media and broken ci
   ];
   for (const input of invalidTemplates) {
     assert.throws(() => publishedTemplate(input, "test-story"), (error) =>
+      error instanceof DomainError && error.code === "failed-precondition");
+  }
+});
+
+test("historical templates keep cited narration, series and an exact four-minute scene timeline", () => {
+  const fixture = historicalFixture();
+  const parsed = publishedTemplate(fixture, "historical-test");
+  assert.equal(parsed.contentKind, "historical-synopsis");
+  assert.equal(parsed.language, "en");
+  assert.equal(parsed.durationMs, 240_000);
+  assert.equal(parsed.seriesId, "temujin-childhood-en");
+  assert.equal(parsed.segments[0]?.kind, "history");
+  assert.equal(parsed.scenes?.[1]?.endMs, 240_000);
+  assert.deepEqual(parsed.sourceSections, [59, 60, 61, 62, 63, 64, 65, 66]);
+  (fixture.sourceSections as number[])[0] = 1;
+  (fixture.scenes as { caption: string }[])[0]!.caption = "Changed later";
+  assert.equal(parsed.sourceSections?.[0], 59);
+  assert.equal(parsed.scenes?.[0]?.caption, "The Onon region");
+});
+
+test("historical publication rejects invented source types and mismatched scene timing", () => {
+  const invalidTemplates = [
+    { ...historicalFixture(), seriesId: undefined },
+    { ...historicalFixture(), durationMs: 0 },
+    { ...historicalFixture(), sourceSections: [59, 59] },
+    { ...historicalFixture(), sourceSections: [283] },
+    { ...historicalFixture(), segments: [{ text: "Uncited assertion", kind: "history" }] },
+    { ...historicalFixture(), segments: [{ text: "Imagined fiction", kind: "legend", citationId: "editorial" }] },
+    { ...historicalFixture(), scenes: [{ startMs: 1, endMs: 240_000, placeId: "onon-basin", caption: "Gap" }] },
+    { ...historicalFixture(), scenes: [{ startMs: 0, endMs: 239_999, placeId: "onon-basin", caption: "Short" }] },
+    { ...historicalFixture(), scenes: [{ startMs: 0, endMs: 240_001, placeId: "onon-basin", caption: "Long" }] },
+  ];
+  for (const fixture of invalidTemplates) {
+    assert.throws(() => publishedTemplate(fixture, "historical-test"), (error) =>
       error instanceof DomainError && error.code === "failed-precondition");
   }
 });

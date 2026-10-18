@@ -274,9 +274,11 @@ class _ShareScreenState extends State<ShareScreen> {
                           ),
                           const SizedBox(height: 22),
                           const Divider(color: Color(0x66F2EFE7)),
-                          const Text(
-                            'PREPARED DEMO · ORIGINAL FICTION',
-                            style: TextStyle(
+                          Text(
+                            app.templateFor(story).isHistorical
+                                ? 'SECRET HISTORY · ENGLISH SYNOPSIS'
+                                : 'PREPARED DEMO · ORIGINAL FICTION',
+                            style: const TextStyle(
                               fontSize: 9,
                               letterSpacing: 1,
                               color: OvColors.cream,

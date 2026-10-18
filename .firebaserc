@@ -1,6 +1,8 @@
 {
   "projects": {
-    "default": "demo-ov-chronicles",
-    "dev": "ov-chronicles-dev-20261016"
+    "default": "ov-ai-5ae61",
+    "dev": "ov-chronicles-dev-20261016",
+    "cloud": "ov-ai-5ae61",
+    "emulator": "demo-ov-chronicles"
   }
 }

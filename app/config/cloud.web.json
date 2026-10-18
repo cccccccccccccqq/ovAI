@@ -1,0 +1,6 @@
+{
+  "BACKEND_MODE": "cloud",
+  "AUTH_MODE": "live",
+  "APP_CHECK_WEB_PROVIDER": "recaptcha-enterprise",
+  "APP_CHECK_WEB_SITE_KEY": "6LfB2fQtAAAAAC2glB-JmKEf49U4KjAFAPMifmg1"
+}

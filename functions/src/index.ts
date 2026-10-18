@@ -5,6 +5,7 @@ import { setGlobalOptions } from "firebase-functions/v2";
 import { HttpsError, onCall, type CallableRequest } from "firebase-functions/v2/https";
 import { DomainError } from "./domain.js";
 import * as service from "./service.js";
+import * as chapters from "./chapters.js";
 
 if (getApps().length === 0) initializeApp();
 const database = getFirestore();
@@ -39,3 +40,6 @@ export const patchLibraryItem = onCall(callableOptions, (request) =>
 
 export const deleteChronicle = onCall(callableOptions, (request) =>
   authenticated(request, (uid, data) => service.deleteChronicle(database, uid, data)));
+
+export const patchChapterProgress = onCall(callableOptions, (request) =>
+  authenticated(request, (uid, data) => chapters.patchChapterProgress(database, uid, data)));

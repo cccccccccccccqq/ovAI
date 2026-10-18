@@ -1,5 +1,8 @@
 # Firebase client foundation
 
+> Current cloud target: **ov-ai-5ae61**. See [migration status](../../CLOUD_MIGRATION_STATUS.mn.md) and [cloud connection setup](CLOUD_CONNECTION.md). Explicit local runs require both `BACKEND_MODE=emulator` and `AUTH_MODE=emulator`.
+
+
 The content/backend client lives in `lib/backend/`. It uses the real FlutterFire SDKs for Auth,
 Firestore, callable Cloud Functions, and Storage. Importing it does not connect,
 create an account, or change the prototype's local profile and library. The main

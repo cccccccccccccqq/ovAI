@@ -32,3 +32,23 @@ export function preparedFixture(id = "test-story"): Record<string, unknown> {
     nextIds: ["chapter-two"],
   };
 }
+
+export function historicalFixture(id = "historical-test"): Record<string, unknown> {
+  return {
+    ...preparedFixture(id),
+    siteId: "onon",
+    contentKind: "historical-synopsis",
+    title: "A Child beside the Onon",
+    genre: "History",
+    style: "Plainspoken",
+    mood: "Reflective",
+    durationMs: 240_000,
+    seriesId: "temujin-childhood-en",
+    sourceSections: [59, 60, 61, 62, 63, 64, 65, 66],
+    segments: [{ text: "The chronicle places Temujin's birth beside the Onon.", kind: "history", citationId: "editorial" }],
+    scenes: [
+      { id: "birth", startMs: 0, endMs: 120_000, placeId: "onon-basin", caption: "The Onon region" },
+      { id: "betrothal", startMs: 120_000, endMs: 240_000, placeId: "onon-basin", caption: "A journey with Yesugei" },
+    ],
+  };
+}

@@ -86,6 +86,15 @@ before(async () => {
     const database = context.firestore();
     const documents = {
       'sites/kharkhorin': { name: 'Kharkhorin' },
+      'series/published-series': { status: 'published', title: 'Тэмүжиний бага нас' },
+      'series/draft-series': { status: 'draft' },
+      'chapters/published-chapter': { status: 'published', title: 'Ононы эрэгт мэндэлсэн хүү' },
+      'chapters/draft-chapter': { status: 'draft' },
+      'historicalPlaces/onon': { status: 'published', confidence: 'regional' },
+      'historicalPlaces/private-place': { status: 'draft' },
+      'users/alice/chapterProgress/published-chapter': { audioPositionMs: 92000, contentVersion: 1 },
+      'users/bob/chapterProgress/published-chapter': { audioPositionMs: 40000, contentVersion: 1 },
+      'chapters/published-chapter/private/secret': { secret: true },
       'storyTemplates/published': { siteId: 'kharkhorin', status: 'published', title: 'Published story' },
       'storyTemplates/draft': { siteId: 'kharkhorin', status: 'draft', title: 'Private draft' },
       'users/alice': { displayName: 'Alice', role: 'admin' },
@@ -292,5 +301,45 @@ test('media uploads, deletions and download-token metadata changes are server-on
       new Uint8Array([1, 2, 3]),
       { customMetadata: { firebaseStorageDownloadTokens: 'client-supplied-public-token' } },
     ));
+  }
+});
+
+
+test('published historical series, chapters and places are shared while drafts stay private', async () => {
+  for (const [collectionName, publishedId, draftId] of [
+    ['series', 'published-series', 'draft-series'],
+    ['chapters', 'published-chapter', 'draft-chapter'],
+    ['historicalPlaces', 'onon', 'private-place'],
+  ]) {
+    for (const context of [unauthenticated, guest, alice, bob]) {
+      const database = context.firestore();
+      await assertSucceeds(getDoc(doc(database, collectionName, publishedId)));
+      await assertFails(getDoc(doc(database, collectionName, draftId)));
+      const published = await assertSucceeds(getDocs(query(collection(database, collectionName), where('status', '==', 'published'))));
+      assert.equal(published.size, 1);
+      await assertFails(getDocs(collection(database, collectionName)));
+    }
+    await assertSucceeds(getDoc(doc(admin.firestore(), collectionName, draftId)));
+    for (const context of [unauthenticated, alice, admin]) {
+      await assertFails(setDoc(doc(context.firestore(), collectionName, 'new-content'), { status: 'published' }));
+      await assertFails(updateDoc(doc(context.firestore(), collectionName, publishedId), { title: 'Forged' }));
+      await assertFails(deleteDoc(doc(context.firestore(), collectionName, publishedId)));
+    }
+  }
+  await assertFails(getDoc(doc(alice.firestore(), 'chapters/published-chapter/private/secret')));
+});
+
+test('chapter progress is owner-readable and can only be written through server APIs', async () => {
+  const path = 'users/alice/chapterProgress/published-chapter';
+  await assertSucceeds(getDoc(doc(alice.firestore(), path)));
+  await assertSucceeds(getDocs(collection(alice.firestore(), 'users/alice/chapterProgress')));
+  for (const context of [unauthenticated, bob, guest, admin]) {
+    await assertFails(getDoc(doc(context.firestore(), path)));
+    await assertFails(getDocs(collection(context.firestore(), 'users/alice/chapterProgress')));
+  }
+  for (const context of [unauthenticated, alice, bob, guest, admin]) {
+    await assertFails(setDoc(doc(context.firestore(), 'users/alice/chapterProgress/new-chapter'), { audioPositionMs: 0 }));
+    await assertFails(updateDoc(doc(context.firestore(), path), { audioPositionMs: 240000 }));
+    await assertFails(deleteDoc(doc(context.firestore(), path)));
   }
 });

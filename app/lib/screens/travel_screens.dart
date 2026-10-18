@@ -138,6 +138,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
       return;
     }
     for (final site in app.sites) {
+      if (site.isApproximate) continue;
       if (isConfidentArrival(position, siteLat: site.lat, siteLng: site.lng)) {
         _arrivalDismissedAt = DateTime.now();
         unawaited(app.selectSite(site.id));
@@ -167,6 +168,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
   }
 
   Future<void> _openDirections(Site site) async {
+    if (site.isApproximate) return;
     var opened = false;
     try {
       opened = await launchUrl(
@@ -272,7 +274,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
           const SizedBox(height: 24),
           const SectionHeading(
             title: 'Along your journey',
-            subtitle: 'Four places in the Orkhon Valley',
+            subtitle: 'Explore places and historical regions',
           ),
           const SizedBox(height: 12),
           for (final site in app.sites)
@@ -288,35 +290,49 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
                 ),
                 title: Text(site.name),
                 subtitle: Text(
-                  _position == null
-                      ? site.era
-                      : '${(Geolocator.distanceBetween(_position!.latitude, _position!.longitude, site.lat, site.lng) / 1000).toStringAsFixed(1)} km · ${_live ? 'from your location' : 'from demo marker'}',
+                  site.locationNote ??
+                      (_position == null
+                          ? site.era
+                          : '${(Geolocator.distanceBetween(_position!.latitude, _position!.longitude, site.lat, site.lng) / 1000).toStringAsFixed(1)} km · ${_live ? 'from your location' : 'from demo marker'}'),
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 selected: selected.id == site.id,
                 onTap: () {
                   app.selectSite(site.id);
-                  if (!app.offline) _map.move(LatLng(site.lat, site.lng), 13);
+                  if (!app.offline) {
+                    _map.move(
+                      LatLng(site.lat, site.lng),
+                      site.isApproximate ? 7 : 13,
+                    );
+                  }
                 },
               ),
             ),
           const SizedBox(height: 20),
+          if (!selected.isApproximate)
+            PillButton(
+              label: 'Directions in Google Maps',
+              icon: Icons.directions_outlined,
+              secondary: true,
+              onPressed: () => _openDirections(selected),
+            ),
+          if (!selected.isApproximate) const SizedBox(height: 12),
           PillButton(
-            label: 'Directions in Google Maps',
-            icon: Icons.directions_outlined,
-            secondary: true,
-            onPressed: () => _openDirections(selected),
-          ),
-          const SizedBox(height: 12),
-          PillButton(
-            label: 'Try arrival at ${selected.name}',
-            icon: Icons.near_me_outlined,
-            onPressed: () => _demoArrival(selected),
+            label: selected.isApproximate
+                ? 'Explore this region'
+                : 'Try arrival at ${selected.name}',
+            icon: selected.isApproximate
+                ? Icons.explore_outlined
+                : Icons.near_me_outlined,
+            onPressed: selected.isApproximate
+                ? () => context.go('/steppe')
+                : () => _demoArrival(selected),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Demo arrival uses a prepared location. Your device location is only requested when you tap Use my location.',
-            style: TextStyle(fontSize: 12),
+          Text(
+            selected.locationNote ??
+                'Demo arrival uses a prepared location. Your device location is only requested when you tap Use my location.',
+            style: const TextStyle(fontSize: 12),
           ),
         ],
       ),

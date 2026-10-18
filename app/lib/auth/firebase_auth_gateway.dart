@@ -7,10 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../backend/firebase_options_dev.dart';
+import '../backend/cloud_firebase.dart';
 import 'auth_gateway.dart';
 
-/// Authentication-only connection. It does not initialize paid Firebase services
-/// or require App Check, and it never creates an anonymous account on startup.
+/// Uses the main Firebase app shared by cloud catalog and owner data.
+/// Restoring a social session never creates an anonymous account on startup.
 class FirebaseAuthGateway implements AuthGateway {
   FirebaseAuthGateway.live({this.googleServerClientId, this.googleIosClientId})
     : isEmulator = false,
@@ -61,7 +62,7 @@ class FirebaseAuthGateway implements AuthGateway {
               emulatorPort > 65535)) {
         throw const AuthFailure('invalid-emulator-address');
       }
-      final appName = isEmulator ? 'ov-social-emulator' : 'ov-social-live';
+      const appName = 'ov-social-emulator';
       final options = isEmulator
           ? FirebaseOptions(
               apiKey: 'ADemoProjectApiKey000000000000000000000',
@@ -78,7 +79,9 @@ class FirebaseAuthGateway implements AuthGateway {
             )
           : DevFirebaseOptions.currentPlatform;
       final existingApps = Firebase.apps.where((app) => app.name == appName);
-      final app = existingApps.isEmpty
+      final app = !isEmulator
+          ? await CloudFirebase.initialize()
+          : existingApps.isEmpty
           ? await Firebase.initializeApp(name: appName, options: options)
           : existingApps.single;
       if (app.options.projectId != options.projectId) {

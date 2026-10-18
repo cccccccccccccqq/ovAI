@@ -22,6 +22,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Versioned public editorial content. Scene cues are embedded in the chapter
+    // document so narration, timing and map references change atomically.
+    match /series/{seriesId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if false;
+    }
+
+    match /chapters/{chapterId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if false;
+    }
+
+    match /historicalPlaces/{placeId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if false;
+    }
+
     match /chronicles/{chronicleId} {
       allow read: if isOwner(resource.data.uid) && resource.data.status != 'deleted';
       allow write: if false;
@@ -30,6 +47,11 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isOwner(uid);
       allow write: if false;
+
+      match /chapterProgress/{chapterId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
 
       match /library/{chronicleId} {
         allow read: if isOwner(uid);

@@ -61,16 +61,19 @@ export interface PreparedInput {
   requestId: string;
   templateId: string;
   voiceId: string;
+  parentId?: string;
 }
 
 export function parsePreparedInput(value: unknown): PreparedInput {
   const input = record(value, "Input");
-  allowedKeys(input, ["requestId", "templateId", "voiceId"]);
-  return {
+  allowedKeys(input, ["requestId", "templateId", "voiceId", "parentId"]);
+  const parsed: PreparedInput = {
     requestId: identifier(input.requestId, "requestId", 128),
     templateId: identifier(input.templateId, "templateId"),
     voiceId: identifier(input.voiceId, "voiceId"),
   };
+  if (input.parentId !== undefined) parsed.parentId = identifier(input.parentId, "parentId");
+  return parsed;
 }
 
 export interface LibraryPatch {
@@ -120,8 +123,12 @@ export function requestKey(uid: string, requestId: string): string {
   return createHash("sha256").update(JSON.stringify([uid, requestId])).digest("hex");
 }
 
-export function payloadHash(input: Pick<PreparedInput, "templateId" | "voiceId">): string {
-  return createHash("sha256").update(JSON.stringify([input.templateId, input.voiceId])).digest("hex");
+export function payloadHash(input: Pick<PreparedInput, "templateId" | "voiceId" | "parentId">): string {
+  // Retain hashes for existing requests, while binding a new path choice to its
+  // owned parent snapshot so retries cannot silently move between journeys.
+  const fields = [input.templateId, input.voiceId];
+  if (input.parentId !== undefined) fields.push(input.parentId);
+  return createHash("sha256").update(JSON.stringify(fields)).digest("hex");
 }
 
 /** Prepared copies have a separate write-abuse cap, not an AI generation quota. */
@@ -153,7 +160,7 @@ function storagePath(value: unknown): string {
 
 export interface Segment {
   text: string;
-  kind: "legend" | "context";
+  kind: "legend" | "context" | "history";
   citationId?: string;
 }
 
@@ -181,15 +188,29 @@ export interface PublishedTemplate {
   voiceIds: string[];
   language: "en";
   contentVersion: number;
-  contentKind: "prepared-demo";
+  contentKind: "prepared-demo" | "historical-synopsis";
   audioByVoice: Record<string, { storagePath: string; status: "ready" }>;
   imagePath?: string;
   nextIds?: string[];
+  durationMs?: number;
+  seriesId?: string;
+  sourceSections?: number[];
+  scenes?: HistoricalScene[];
+}
+
+export interface HistoricalScene {
+  id?: string;
+  startMs: number;
+  endMs: number;
+  placeId: string;
+  caption: string;
+  narration?: string;
 }
 
 function parseTemplate(value: unknown, templateId: string): PublishedTemplate {
   const data = record(value, "Template");
-  if (data.id !== templateId || data.language !== "en" || data.contentKind !== "prepared-demo" ||
+  if (data.id !== templateId || data.language !== "en" ||
+      (data.contentKind !== "prepared-demo" && data.contentKind !== "historical-synopsis") ||
       !Number.isSafeInteger(data.contentVersion) || (data.contentVersion as number) < 1 ||
       (data.contentVersion as number) > 100_000 ||
       !Number.isSafeInteger(data.chapter) || (data.chapter as number) < 1 || (data.chapter as number) > 1000) {
@@ -224,7 +245,7 @@ function parseTemplate(value: unknown, templateId: string): PublishedTemplate {
   }
   const segments = data.segments.map((item): Segment => {
     const segment = record(item, "Segment");
-    if (segment.kind !== "legend" && segment.kind !== "context") {
+    if (segment.kind !== "legend" && segment.kind !== "context" && segment.kind !== "history") {
       throw new DomainError("invalid-argument", "Segment kind is not valid.");
     }
     const result: Segment = { text: text(segment.text, "segment text", 20_000), kind: segment.kind };
@@ -237,6 +258,10 @@ function parseTemplate(value: unknown, templateId: string): PublishedTemplate {
     }
     return result;
   });
+  if (data.contentKind === "historical-synopsis" && segments.some((segment) =>
+    segment.kind === "legend" || segment.citationId === undefined)) {
+    throw new DomainError("invalid-argument", "Historical narration must identify its source and content kind.");
+  }
   if (segments.reduce((sum, segment) => sum + segment.text.length, 0) > 200_000) {
     throw new DomainError("invalid-argument", "Template content is too large.");
   }
@@ -268,7 +293,7 @@ function parseTemplate(value: unknown, templateId: string): PublishedTemplate {
     voiceIds,
     language: "en",
     contentVersion: data.contentVersion as number,
-    contentKind: "prepared-demo",
+    contentKind: data.contentKind,
     audioByVoice,
   };
   if (data.imagePath !== undefined && data.imagePath !== null) {
@@ -279,6 +304,54 @@ function parseTemplate(value: unknown, templateId: string): PublishedTemplate {
       throw new DomainError("invalid-argument", "nextIds is not valid.");
     }
     result.nextIds = data.nextIds.map((id) => identifier(id, "nextId"));
+  }
+  if (data.durationMs !== undefined) {
+    if (!Number.isSafeInteger(data.durationMs) || (data.durationMs as number) <= 0 ||
+        (data.durationMs as number) > 86_400_000) {
+      throw new DomainError("invalid-argument", "Audio duration is not valid.");
+    }
+    result.durationMs = data.durationMs as number;
+  }
+  if (data.seriesId !== undefined) result.seriesId = identifier(data.seriesId, "seriesId");
+  if (data.sourceSections !== undefined) {
+    if (!Array.isArray(data.sourceSections) || data.sourceSections.length === 0 || data.sourceSections.length > 282 ||
+        data.sourceSections.some((section) => !Number.isSafeInteger(section) || section < 1 || section > 282) ||
+        new Set(data.sourceSections).size !== data.sourceSections.length) {
+      throw new DomainError("invalid-argument", "Source section references are not valid.");
+    }
+    result.sourceSections = [...data.sourceSections] as number[];
+  }
+  if (data.scenes !== undefined) {
+    if (!Array.isArray(data.scenes) || data.scenes.length === 0 || data.scenes.length > 100 ||
+        result.durationMs === undefined) {
+      throw new DomainError("invalid-argument", "Scenes need an audio duration and bounded timeline.");
+    }
+    let previousEnd = 0;
+    result.scenes = data.scenes.map((value): HistoricalScene => {
+      const scene = record(value, "Scene");
+      if (!Number.isSafeInteger(scene.startMs) || !Number.isSafeInteger(scene.endMs) ||
+          scene.startMs !== previousEnd || (scene.endMs as number) <= (scene.startMs as number) ||
+          (scene.endMs as number) > result.durationMs!) {
+        throw new DomainError("invalid-argument", "Scene timeline has gaps, overlaps or invalid cue times.");
+      }
+      previousEnd = scene.endMs as number;
+      const parsed: HistoricalScene = {
+        startMs: scene.startMs as number,
+        endMs: scene.endMs as number,
+        placeId: identifier(scene.placeId, "placeId"),
+        caption: text(scene.caption, "scene caption", 1000),
+      };
+      if (scene.id !== undefined) parsed.id = identifier(scene.id, "scene id");
+      if (scene.narration !== undefined) parsed.narration = text(scene.narration, "scene narration", 20_000);
+      return parsed;
+    });
+    if (previousEnd !== result.durationMs) {
+      throw new DomainError("invalid-argument", "Scenes do not cover the full narration.");
+    }
+  }
+  if (data.contentKind === "historical-synopsis" &&
+      (result.durationMs === undefined || result.seriesId === undefined || result.sourceSections === undefined)) {
+    throw new DomainError("invalid-argument", "Historical narration needs versioned series, duration and source sections.");
   }
   return result;
 }

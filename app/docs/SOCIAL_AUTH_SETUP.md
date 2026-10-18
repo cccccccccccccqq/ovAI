@@ -4,7 +4,7 @@
 
 ## Одоогийн орчин
 
-- Default нь `AUTH_MODE=live`: бүртгэлтэй dev project `ov-chronicles-dev-20261016`-ийн бодит Firebase Authentication руу холбогдоно.
+- Default нь `BACKEND_MODE=cloud` (`AUTH_MODE=live` optional): бүртгэлтэй dev project `ov-ai-5ae61`-ийн бодит Firebase Authentication руу холбогдоно.
 - `AUTH_MODE=emulator`-ийг тодорхой сонгосноор үнэгүй local Authentication emulator, project `demo-ov-chronicles`, порт `9099`-ийг ашиглана.
 - Auth-ийн сонголт нь Cloud Functions, Firestore, Storage-ийн шилжилттэй тусдаа. Live auth ашиглах нь үлдсэн 19 дэлгэцийн контентыг cloud өгөгдөл болгохгүй.
 - Firebase billing өөрчлөх шаардлагагүй. Google/Apple auth нь Spark-ийн хэрэглээний хязгаарт ажиллах боломжтой; Cloud Functions/Storage deploy-ийн Blaze шаардлага тусдаа хэвээр.
@@ -22,7 +22,7 @@ npm run emulators:start
 `app` хавтсаас web аппыг ажиллуулна:
 
 ```sh
-flutter run -d chrome --dart-define=AUTH_MODE=emulator
+flutter run -d chrome --dart-define=BACKEND_MODE=emulator --dart-define=AUTH_MODE=emulator
 ```
 
 Emulator-ийн Google/Apple popup нь туршилтын account оруулах local хуудас харуулна. Энэ нь бодит Google эсвэл Apple account-ын зөвшөөрөл авах дэлгэц биш. Энд account үүсгэж, дахин нэвтрэх, session сэргээх, гарах болон хэрэглэгч хооронд өгөгдөл холилдохгүй байхыг шалгана. Туршилтын popup-д бодит account-ын нууц үг оруулахгүй.
@@ -31,7 +31,7 @@ Native emulator горимын social login бодит Google/Apple SDK-г са�
 
 ## Google тохируулах
 
-1. [Firebase Authentication → Sign-in method](https://console.firebase.google.com/project/ov-chronicles-dev-20261016/authentication/providers) дотор Google provider-ийг нээнэ.
+1. [Firebase Authentication → Sign-in method](https://console.firebase.google.com/project/ov-ai-5ae61/authentication/providers) дотор Google provider-ийг нээнэ.
 2. Хэрэглэгчид харагдах app нэр болон project-ийн эзэмшигчийн сонгосон support email-ийг оруулж идэвхжүүлнэ. Support email нь OAuth зөвшөөрлийн дэлгэц дээр харагдах тул CLI-д нэвтэрсэн email-ийг автоматаар нийтлэхгүй.
 3. Google provider идэвхжсэний дараа iOS, Android SDK config-ийг дахин татна. Өмнө татсан Firebase API key нь Google OAuth client ID-г орлохгүй.
 4. Web local туршилт хийх бол Authentication → Settings → Authorized domains дотор ашиглах `localhost` эсвэл `127.0.0.1` hostname-ийг нэмнэ. Domain-д порт эсвэл URL зам оруулахгүй.
@@ -79,10 +79,10 @@ flutter run -d YOUR_ANDROID_DEVICE \
 
 1. [Apple Developer → Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list) дээр `mn.ov.ovChronicles` App ID-д Sign in with Apple-ийг идэвхжүүлнэ.
 2. `Runner/Runner.entitlements` файлд Apple capability-ийн загвар бэлдсэн; **одоогийн build-д холбоогүй, capability идэвхгүй**. Ингэснээр Google login болон одоогийн signing тохиргоо Apple capability-тай provisioning profile шаардахгүй. Developer account бэлэн болсон үед Xcode → Runner → Signing & Capabilities → `+ Capability` → Sign in with Apple-ийг нэмнэ. Runner-ийн Debug/Release/Profile configuration-ийн `CODE_SIGN_ENTITLEMENTS` нь `Runner/Runner.entitlements` руу зааж байгааг шалгаж, төхөөрөмжийн provisioning profile-оо шинэчилнэ.
-3. Web/Android дээр Apple ашиглах бол primary App ID-тай холбоотой Services ID үүсгэнэ. Domain нь `ov-chronicles-dev-20261016.firebaseapp.com`, Return URL нь:
+3. Web/Android дээр Apple ашиглах бол primary App ID-тай холбоотой Services ID үүсгэнэ. Domain нь `ov-ai-5ae61.firebaseapp.com`, Return URL нь:
 
    ```text
-   https://ov-chronicles-dev-20261016.firebaseapp.com/__/auth/handler
+   https://ov-ai-5ae61.firebaseapp.com/__/auth/handler
    ```
 
 4. Apple Sign in key үүсгэн Team ID, Key ID болон private `.p8` key-г Firebase Console-ийн Apple provider → OAuth code flow configuration-д оруулна. Services ID-г мөн Apple provider дээр тохируулна.

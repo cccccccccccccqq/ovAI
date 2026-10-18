@@ -121,7 +121,7 @@ class SignInScreen extends StatelessWidget {
           Text(
             auth.isEmulator
                 ? 'These are simulated sign-ins for local testing. No real Google or Apple account is used.'
-                : 'Your sign-in is secured by Firebase. Stories and reading progress are currently saved on this device for each account.',
+                : 'Your stories and reading progress are saved to your account. Reading settings and downloads stay on this device.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.6),
           ),

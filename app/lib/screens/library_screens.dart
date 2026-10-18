@@ -48,7 +48,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Remove this chronicle?'),
         content: Text(
-          '“${story.title}” and its reading progress will be removed from this device. The prepared story remains in Explore.',
+          '“${story.title}” and its reading progress will be removed from your Scrolls. The prepared story remains in Explore.',
         ),
         actions: [
           TextButton(
@@ -142,7 +142,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    '${state.library.length} ${state.library.length == 1 ? 'chronicle' : 'chronicles'} · saved on this device',
+                    '${state.library.length} ${state.library.length == 1 ? 'chronicle' : 'chronicles'} · saved in your Scrolls',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -208,7 +208,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               size: 19,
                             ),
                             title: Text(
-                              'Remove from device',
+                              'Remove from Scrolls',
                               style: TextStyle(color: OvColors.red),
                             ),
                           ),
@@ -224,9 +224,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
             const SectionHeading(
               title: 'One place. Many paths.',
               subtitle:
-                  'Follow an unfolding story through three chapters. Your choices connect them.',
+                  'Follow an unfolding story chapter by chapter. Your choices connect them.',
             ),
             const _JourneyOverview(),
+            for (final template in state.templates.where(
+              (item) => item.isHistorical && item.id == 'onon-child-en',
+            )) ...[
+              const SizedBox(height: 20),
+              _JourneyOverview(template: template),
+            ],
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(18),
@@ -255,9 +261,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
           ],
           if (_tab == 2) ...[
             const SectionHeading(
-              title: 'From the Orkhon Valley',
+              title: 'Stories from Mongolia',
               subtitle:
-                  'A small collection of prepared stories, with historical context and clearly marked fiction.',
+                  'Prepared stories and historical synopses, with reading notes and sources.',
             ),
             for (final template in state.templates)
               Padding(
@@ -345,28 +351,40 @@ class _LibraryEmpty extends StatelessWidget {
 }
 
 class _JourneyOverview extends StatelessWidget {
-  const _JourneyOverview();
+  const _JourneyOverview({this.template});
+  final StoryTemplate? template;
+
+  bool get _historical => template?.isHistorical ?? false;
+  int get _chapterCount => _historical ? 5 : 3;
+
+  void _open(BuildContext context) =>
+      context.push(_historical ? '/demo/${template!.id}' : '/journey');
+
   @override
   Widget build(BuildContext context) => ClipRRect(
     borderRadius: BorderRadius.circular(24),
     child: Material(
       color: OvColors.night,
       child: InkWell(
-        onTap: () => context.push('/journey'),
+        onTap: () => _open(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Stack(
               children: [
-                const AppImage(
-                  path: 'assets/images/silver-tree.jpg',
+                AppImage(
+                  path: template?.image ?? 'assets/images/silver-tree.jpg',
                   height: 230,
                   width: double.infinity,
                 ),
-                const Positioned(
+                Positioned(
                   left: 17,
                   top: 16,
-                  child: DemoBadge(text: '3 CHAPTERS · KHARKHORIN'),
+                  child: DemoBadge(
+                    text: _historical
+                        ? '5 CHAPTERS · ONON RIVER'
+                        : '3 CHAPTERS · KHARKHORIN',
+                  ),
                 ),
               ],
             ),
@@ -375,9 +393,11 @@ class _JourneyOverview extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Beneath the\nSilver Tree',
-                    style: TextStyle(
+                  Text(
+                    _historical
+                        ? 'The Secret History\nof Temujin'
+                        : 'Beneath the\nSilver Tree',
+                    style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 30,
                       height: 1.14,
@@ -388,7 +408,9 @@ class _JourneyOverview extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'A traveller, a goldsmith, and a city at the meeting point of worlds.',
+                    _historical
+                        ? 'From the Onon River to the friendships that shaped a young life. Five four-minute chapters in English.'
+                        : 'A traveller, a goldsmith, and a city at the meeting point of worlds.',
                     style: TextStyle(
                       fontSize: 14,
                       height: 1.65,
@@ -398,7 +420,7 @@ class _JourneyOverview extends StatelessWidget {
                   const SizedBox(height: 22),
                   Row(
                     children: [
-                      for (var i = 1; i <= 3; i++) ...[
+                      for (var i = 1; i <= _chapterCount; i++) ...[
                         Container(
                           width: 32,
                           height: 32,
@@ -421,7 +443,7 @@ class _JourneyOverview extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (i < 3)
+                        if (i < _chapterCount)
                           Expanded(
                             child: Container(
                               height: 1,
@@ -435,7 +457,7 @@ class _JourneyOverview extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
-                      onPressed: () => context.push('/journey'),
+                      onPressed: () => _open(context),
                       icon: const Icon(Icons.route_rounded, size: 20),
                       label: const Text('Open journey'),
                       style: FilledButton.styleFrom(
@@ -534,7 +556,7 @@ class ProfileScreen extends StatelessWidget {
         .length;
     final name = state.profileName ?? 'Guest traveller';
     return AppScaffold(
-      title: 'Your Orda',
+      title: 'öv AI',
       eyebrow: 'A home for your journeys',
       showBack: false,
       actions: [
@@ -595,7 +617,7 @@ class ProfileScreen extends StatelessWidget {
                                 : auth?.isSignedIn == true
                                 ? auth!.identity!.email ??
                                       'Signed in with your account'
-                                : 'Your local traveller profile',
+                                : 'Your traveller profile',
                             style: TextStyle(
                               fontSize: 12,
                               color: OvColors.cream.withValues(alpha: .8),
@@ -612,6 +634,8 @@ class ProfileScreen extends StatelessWidget {
                       ? auth!.isEmulator
                             ? 'LOCAL TEST ACCOUNT'
                             : 'CONNECTED ACCOUNT'
+                      : state.usesCloudBackend
+                      ? 'EXPLORING AS A GUEST'
                       : 'ON THIS DEVICE · LOCAL PROTOTYPE',
                 ),
                 const SizedBox(height: 15),
@@ -767,7 +791,11 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Öv AI · Prototype v0.1\nYour stories and preferences are stored on this device.',
+            state.usesCloudBackend
+                ? auth?.isSignedIn == true
+                      ? 'Öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.'
+                      : 'Öv AI · v0.1\nSign in to save stories and reading progress to your account.'
+                : 'Öv AI · Prototype v0.1\nYour stories and preferences are stored on this device.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall,
           ),

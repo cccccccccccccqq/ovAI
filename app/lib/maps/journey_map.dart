@@ -95,6 +95,16 @@ class _JourneyMapState extends State<JourneyMap> {
   bool _osmReady = false;
 
   bool get _usesGoogle => _config.usesGoogle && !_useOsmFallback;
+  Site? get _selectedSite => widget.sites
+      .where((site) => site.id == widget.selectedSiteId)
+      .firstOrNull;
+  LatLng get _initialCenter {
+    final site = _selectedSite;
+    return site == null ? _initialPosition : LatLng(site.lat, site.lng);
+  }
+
+  double get _selectedZoom =>
+      _selectedSite?.isApproximate == true ? 7 : _initialZoom;
 
   @override
   void initState() {
@@ -265,9 +275,9 @@ class _JourneyMapState extends State<JourneyMap> {
   );
 
   Widget _buildGoogle() => google.GoogleMap(
-    initialCameraPosition: const google.CameraPosition(
-      target: google.LatLng(47.02, 102.4),
-      zoom: _initialZoom,
+    initialCameraPosition: google.CameraPosition(
+      target: google.LatLng(_initialCenter.latitude, _initialCenter.longitude),
+      zoom: _selectedZoom,
     ),
     onMapCreated: (controller) {
       if (!mounted || !_usesGoogle || _googleFailed) return;
@@ -286,7 +296,7 @@ class _JourneyMapState extends State<JourneyMap> {
     tiltGesturesEnabled: false,
     minMaxZoomPreference: const google.MinMaxZoomPreference(3, 18),
     markers: {
-      for (final site in widget.sites)
+      for (final site in widget.sites.where((site) => !site.isApproximate))
         google.AdvancedMarker(
           markerId: google.MarkerId('site-${site.id}'),
           position: google.LatLng(site.lat, site.lng),
@@ -296,6 +306,23 @@ class _JourneyMapState extends State<JourneyMap> {
         ),
     },
     circles: {
+      for (final site in widget.sites.where((site) => site.isApproximate))
+        google.Circle(
+          circleId: google.CircleId('region-${site.id}'),
+          center: google.LatLng(site.lat, site.lng),
+          radius: site.radiusMeters ?? 50000,
+          fillColor:
+              (site.id == widget.selectedSiteId
+                      ? OvColors.gold
+                      : OvColors.green)
+                  .withValues(alpha: .15),
+          strokeColor: site.id == widget.selectedSiteId
+              ? OvColors.gold
+              : OvColors.green,
+          strokeWidth: 2,
+          consumeTapEvents: true,
+          onTap: () => widget.onSiteTap(site.id),
+        ),
       if (widget.userPosition case final position?)
         google.Circle(
           circleId: const google.CircleId('user-position'),
@@ -311,6 +338,7 @@ class _JourneyMapState extends State<JourneyMap> {
       google.Polyline(
         polylineId: const google.PolylineId('journey-preview'),
         points: widget.sites
+            .where((site) => !site.isApproximate)
             .map((site) => google.LatLng(site.lat, site.lng))
             .toList(),
         color: OvColors.green.withValues(alpha: .65),
@@ -324,8 +352,8 @@ class _JourneyMapState extends State<JourneyMap> {
       osm.FlutterMap(
         mapController: _osmController,
         options: osm.MapOptions(
-          initialCenter: _initialPosition,
-          initialZoom: _initialZoom,
+          initialCenter: _initialCenter,
+          initialZoom: _selectedZoom,
           minZoom: 3,
           maxZoom: 18,
           onMapReady: () {
@@ -349,11 +377,33 @@ class _JourneyMapState extends State<JourneyMap> {
             polylines: [
               osm.Polyline(
                 points: widget.sites
+                    .where((site) => !site.isApproximate)
                     .map((site) => LatLng(site.lat, site.lng))
                     .toList(),
                 color: OvColors.green.withValues(alpha: .65),
                 strokeWidth: 3,
               ),
+            ],
+          ),
+          osm.CircleLayer(
+            circles: [
+              for (final site in widget.sites.where(
+                (site) => site.isApproximate,
+              ))
+                osm.CircleMarker(
+                  point: LatLng(site.lat, site.lng),
+                  radius: site.radiusMeters ?? 50000,
+                  useRadiusInMeter: true,
+                  color:
+                      (site.id == widget.selectedSiteId
+                              ? OvColors.gold
+                              : OvColors.green)
+                          .withValues(alpha: .15),
+                  borderColor: site.id == widget.selectedSiteId
+                      ? OvColors.gold
+                      : OvColors.green,
+                  borderStrokeWidth: 2,
+                ),
             ],
           ),
           osm.MarkerLayer(
@@ -364,7 +414,9 @@ class _JourneyMapState extends State<JourneyMap> {
                   width: 46,
                   height: 46,
                   child: IconButton(
-                    tooltip: site.name,
+                    tooltip: site.isApproximate
+                        ? '${site.name} · research region'
+                        : site.name,
                     style: IconButton.styleFrom(
                       backgroundColor: widget.selectedSiteId == site.id
                           ? OvColors.gold
@@ -374,7 +426,11 @@ class _JourneyMapState extends State<JourneyMap> {
                           : OvColors.cream,
                     ),
                     onPressed: () => widget.onSiteTap(site.id),
-                    icon: const Icon(Icons.place_outlined),
+                    icon: Icon(
+                      site.isApproximate
+                          ? Icons.public_outlined
+                          : Icons.place_outlined,
+                    ),
                   ),
                 ),
               if (widget.userPosition case final position?)

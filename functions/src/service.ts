@@ -100,6 +100,19 @@ export async function createPreparedChronicle(db: Firestore, uid: string, value:
     if (!template.voiceIds.includes(input.voiceId)) {
       throw new DomainError("invalid-argument", "The selected voice is not available for this story.");
     }
+    if (input.parentId !== undefined) {
+      const parent = await transaction.get(db.doc(`chronicles/${input.parentId}`));
+      if (ownChronicle(parent, uid) !== "ready") {
+        throw new DomainError("failed-precondition", "A deleted chapter cannot continue a path.");
+      }
+      const nextIds: unknown = parent.get("nextIds");
+      if (!Array.isArray(nextIds) || !nextIds.includes(input.templateId)) {
+        throw new DomainError("invalid-argument", "This chapter is not a continuation of the selected path.");
+      }
+      if (parent.get("voiceId") !== input.voiceId) {
+        throw new DomainError("invalid-argument", "A continuing path must keep its selected voice.");
+      }
+    }
     if (usageDocument.exists && (usageDocument.get("uid") !== uid || usageDocument.get("date") !== utcDate ||
         usageDocument.get("kind") !== "prepared-copy" || usageDocument.get("count") === undefined)) {
       throw new DomainError("failed-precondition", "Prepared-copy usage requires recovery.");
@@ -119,6 +132,7 @@ export async function createPreparedChronicle(db: Firestore, uid: string, value:
       mood: template.mood,
       seed: template.seed,
       chapter: template.chapter,
+      ...(input.parentId ? { parentId: input.parentId } : {}),
       segments: template.segments,
       citations: template.citations,
       voiceId: input.voiceId,
@@ -130,6 +144,10 @@ export async function createPreparedChronicle(db: Firestore, uid: string, value:
       ...(audio ? { audioPath: audio.storagePath } : {}),
       ...(template.imagePath ? { imagePath: template.imagePath } : {}),
       ...(template.nextIds ? { nextIds: template.nextIds } : {}),
+      ...(template.durationMs !== undefined ? { durationMs: template.durationMs } : {}),
+      ...(template.seriesId ? { seriesId: template.seriesId } : {}),
+      ...(template.sourceSections ? { sourceSections: template.sourceSections } : {}),
+      ...(template.scenes ? { scenes: template.scenes } : {}),
       createdAt: timestamp,
       updatedAt: timestamp,
     };
@@ -145,6 +163,11 @@ export async function createPreparedChronicle(db: Firestore, uid: string, value:
       bookmarked: false,
       readingProgress: 0,
       audioPositionMs: 0,
+      templateId: template.id,
+      chapter: template.chapter,
+      ...(input.parentId ? { parentId: input.parentId } : {}),
+      ...(template.seriesId ? { seriesId: template.seriesId } : {}),
+      ...(template.durationMs !== undefined ? { durationMs: template.durationMs } : {}),
       ...(template.imagePath ? { imagePath: template.imagePath } : {}),
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -186,6 +209,10 @@ export async function patchLibraryItem(db: Firestore, uid: string, value: unknow
     }
     if (!library.exists || library.get("uid") !== uid || library.get("chronicleId") !== chronicleId) {
       throw new DomainError("not-found", "The library item does not exist.");
+    }
+    const duration: unknown = chronicle.get("durationMs");
+    if (typeof duration === "number" && patch.audioPositionMs !== undefined && patch.audioPositionMs > duration) {
+      throw new DomainError("invalid-argument", "Playback position exceeds this story's audio duration.");
     }
     transaction.update(libraryReference, { ...patch, updatedAt: FieldValue.serverTimestamp() });
   });

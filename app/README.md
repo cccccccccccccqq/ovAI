@@ -1,5 +1,8 @@
 # Öv — stories of the steppe
 
+> Current cloud target: **ov-ai-5ae61**. See [migration status](../CLOUD_MIGRATION_STATUS.mn.md) and [cloud connection setup](docs/CLOUD_CONNECTION.md). Explicit local runs require both `BACKEND_MODE=emulator` and `AUTH_MODE=emulator`.
+
+
 A Flutter prototype of the supplied **Working app · iPhone** design. All 19 screens have working local interactions. Google sign-in now uses Firebase Auth; Apple sign-in is prepared but disabled pending developer/provider setup. Prepared stories, reading progress and recorded narration remain on device, with separate storage for each account.
 
 The Firebase emulator backend and FlutterFire adapter are available separately.

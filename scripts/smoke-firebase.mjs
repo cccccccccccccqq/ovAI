@@ -36,7 +36,9 @@ try {
   const {user} = await signInAnonymously(auth);
   await call('ensureProfile', {displayName: 'Emulator Traveller'});
   const sites = await getDocs(collection(db, 'sites'));
-  assert.equal(sites.size, 4);
+  for (const id of ['kharkhorin', 'erdene-zuu', 'tovkhon', 'ulaan-tsutgalan']) {
+    assert.ok(sites.docs.some((site) => site.id === id), `Missing original demo site: ${id}`);
+  }
   const input = {requestId: randomUUID(), templateId: 'silver-tree', voiceId: 'karen'};
   const created = await call('createPreparedChronicle', input);
   const replay = await call('createPreparedChronicle', input);
@@ -61,7 +63,7 @@ try {
   await assert.rejects(getDocFromServer(storyRef), (error) => error.code === 'permission-denied');
   const deletedReplay = await call('createPreparedChronicle', input);
   assert.equal(deletedReplay.status, 'deleted');
-  console.log(`Seed + client SDK smoke passed: 4 sites, private story snapshot, replay, ${audio.byteLength} audio bytes, progress, deletion.`);
+  console.log(`Seed + client SDK smoke passed: ${sites.size} sites including the original demo, private story snapshot, replay, ${audio.byteLength} audio bytes, progress, deletion.`);
 } finally {
   await signOut(auth);
   await terminate(db);

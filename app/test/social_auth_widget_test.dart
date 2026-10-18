@@ -12,6 +12,7 @@ import 'package:ov_chronicles/screens/discovery_screens.dart';
 import 'package:ov_chronicles/screens/entry_screens.dart';
 import 'package:ov_chronicles/screens/library_screens.dart';
 import 'package:ov_chronicles/screens/sign_in_screen.dart';
+import 'package:ov_chronicles/screens/utility_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 AppIdentity _person(String uid, String name) => AppIdentity(
@@ -100,15 +101,18 @@ void _mockAudioChannels() {
 
 Future<SocialAuthController> _mount(
   WidgetTester tester,
-  _WidgetAuthGateway gateway,
-) async {
+  _WidgetAuthGateway gateway, {
+  String? cloudProjectId,
+}) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   final auth = SocialAuthController(gateway);
   await auth.initialize();
-  await tester.pumpWidget(OvSessionApp(auth: auth));
+  await tester.pumpWidget(
+    OvSessionApp(auth: auth, cloudProjectId: cloudProjectId),
+  );
   await tester.pumpAndSettle();
   addTearDown(() async {
     await tester.pumpWidget(const SizedBox.shrink());
@@ -161,6 +165,57 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'cloud account copy distinguishes saved stories from device settings',
+    (tester) async {
+      final gateway = _WidgetAuthGateway(isEmulator: false);
+      await _mount(tester, gateway, cloudProjectId: 'ov-ai-5ae61');
+      expect(
+        find.text(
+          'Prepared stories. Real places.\nSign in to save your journey.',
+        ),
+        findsOneWidget,
+      );
+      await _tap(tester, 'Begin your journey');
+      expect(
+        find.text(
+          'Your stories and reading progress are saved to your account. Reading settings and downloads stay on this device.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining(
+          'Stories and reading progress are currently saved on this device',
+        ),
+        findsNothing,
+      );
+      await _tap(tester, 'Continue with Google');
+      await _tap(tester, 'Orda');
+      expect(find.text('CONNECTED ACCOUNT'), findsOneWidget);
+      expect(
+        find.text(
+          'Öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.',
+        ),
+        findsOneWidget,
+      );
+      await _tap(tester, 'Settings');
+      expect(find.byType(SettingsScreen), findsOneWidget);
+      expect(find.text('READING SETTINGS · ON THIS DEVICE'), findsOneWidget);
+      expect(find.text('Stories saved to your account'), findsOneWidget);
+      expect(find.textContaining('account sync are planned'), findsNothing);
+      await _tap(tester, 'Reset device settings');
+      expect(find.text('Reset this device?'), findsOneWidget);
+      expect(
+        find.textContaining(
+          'Stories and progress saved to your account will remain.',
+        ),
+        findsOneWidget,
+      );
+      await _tap(tester, 'Keep my settings');
+      expect(find.byType(AlertDialog), findsNothing);
+    },
+  );
 
   testWidgets('live Apple sign-in stays disabled before provider setup', (
     tester,

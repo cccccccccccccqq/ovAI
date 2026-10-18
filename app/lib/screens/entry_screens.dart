@@ -101,7 +101,9 @@ class WelcomeScreen extends StatelessWidget {
                               Text(
                                 AuthScope.maybeOf(context) == null
                                     ? 'Prepared stories. Real places.\nYour journey stays on this device.'
-                                    : 'Prepared stories. Real places.\nSign in with Google or Apple.',
+                                    : AuthScope.of(context).isEmulator
+                                    ? 'Prepared stories. Real places.\nExplore with a local test account.'
+                                    : 'Prepared stories. Real places.\nSign in to save your journey.',
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(

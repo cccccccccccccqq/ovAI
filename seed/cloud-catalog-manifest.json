@@ -1,0 +1,631 @@
+{
+  "schemaVersion": 1,
+  "projectId": "ov-ai-5ae61",
+  "inputFiles": [
+    {
+      "path": "seed/catalog.json",
+      "sha256": "b0f21eb7e26bf66cf6dc298ed1adfd4da89c5840860c08620e9809cbd34511a8"
+    },
+    {
+      "path": "seed/secret-history-english.json",
+      "sha256": "0bc45558cc0156c6086cbedd40f48db77c3a03e7e3685cff214aac06118e02db"
+    },
+    {
+      "path": "seed/secret-history-english-audio.production.json",
+      "sha256": "72f9dbdfb5f7de047d1aa0f7440527089e6d73e6eff1ef51c6ac7be6cc7abbe7"
+    },
+    {
+      "path": "seed/cloud-catalog-provenance.json",
+      "sha256": "40c186317c8a2c348e508d1478d30f5bd3ca633f20c790a133c7b8d6391c1cd2"
+    }
+  ],
+  "documents": [
+    {
+      "path": "chapters/brothers-conflict-en",
+      "sha256": "a7667ea29d45c5d717b4b21426e56b6d045cac778600d051202e8899d7702734"
+    },
+    {
+      "path": "chapters/eight-horses-en",
+      "sha256": "d11944c0f0c274c66ed3a9da21fd9f3d5f8b41b916382468dc16951e044623df"
+    },
+    {
+      "path": "chapters/hoelun-family-en",
+      "sha256": "c8671b47e680422bdb47a550360590676d1c8e15e47723da908a6ca2480b63c3"
+    },
+    {
+      "path": "chapters/onon-child-en",
+      "sha256": "86b78cd5543b4488be86757348b2ef225939929c80feb3312d059f1a5313b0f4"
+    },
+    {
+      "path": "chapters/taichiud-escape-en",
+      "sha256": "951fc358d8785265a59cd6e46da9e06f11c153826c413935a706a18570a509e4"
+    },
+    {
+      "path": "historicalPlaces/deli-un-boldaq",
+      "sha256": "6839a4813ceba0e48a3e35789053d871648354a1167374e6349716bd31dc970e"
+    },
+    {
+      "path": "historicalPlaces/onon-basin",
+      "sha256": "ca5174e0cda2afc9e7458533d99637aa1695633d24932941911ad11ea31fc260"
+    },
+    {
+      "path": "series/temujin-childhood-en",
+      "sha256": "d1cf251ef08f4cbeb9900ee6dde73b69b0cf3297e7f6b59a7022e4d78440570e"
+    },
+    {
+      "path": "sites/erdene-zuu",
+      "sha256": "f5e3aef7ffbd30b9302ca82fcb6c0cdcc5e4e74b62e892f71f8f9a3db0c9a539"
+    },
+    {
+      "path": "sites/kharkhorin",
+      "sha256": "ee4c84b64488bcb3f56cdb451ffc6bd7db09b3910617650ba3a227134c0bbc7a"
+    },
+    {
+      "path": "sites/onon",
+      "sha256": "83a9df6106d8b5bdfe4429d9988b70e8fa83870716b6c8057c41637e27961405"
+    },
+    {
+      "path": "sites/tovkhon",
+      "sha256": "b26b3e3c9db14d1863d8bc749cb580016e56975bec5f946edbe1d2bb2bddff12"
+    },
+    {
+      "path": "sites/ulaan-tsutgalan",
+      "sha256": "d2ef7153a32798170c8489cb828cd14c19d090ead3f177a0f29bb81eef12d4c2"
+    },
+    {
+      "path": "sources/demo-editorial",
+      "sha256": "c0f11b7c68c22afc55f9d14e70761a5f3c847e39d17d7089fe628a48d9c946ad"
+    },
+    {
+      "path": "sources/secret-history-de-rachewiltz-2015",
+      "sha256": "8d330f38a7f0c7f52c0ec623c717205f91205cee447cee514a7a1b99514d6ade"
+    },
+    {
+      "path": "sources/sh-59-66",
+      "sha256": "32142cc6bcfc7420b6bfab2c34e1f85c2d65af51d611696b97c339c230f23c10"
+    },
+    {
+      "path": "sources/sh-67-75",
+      "sha256": "a0803c53b6a6cb93f341f1fc24273c647904c29b5eb4001a79421b4857c2f21b"
+    },
+    {
+      "path": "sources/sh-76-78",
+      "sha256": "a492a1fc70579a59f7cb3a3f1cd8f2c8d6db80c908df7ba049d73a9f1536ac30"
+    },
+    {
+      "path": "sources/sh-79-89",
+      "sha256": "f6c43c3201e89d88dea5f7065f0add32eb3bfd2651ed55cd78fbd89371ff9980"
+    },
+    {
+      "path": "sources/sh-90-93",
+      "sha256": "534d0750aac1b1e818fbbda97c6083feeaf53fc44c0f8b9139128e640273c9ef"
+    },
+    {
+      "path": "sources/unesco-capital",
+      "sha256": "2418dea9e80993daf678fd3b73fdb220c2568c831fdf92d62ac35622e4f6b770"
+    },
+    {
+      "path": "sources/unesco-monasteries",
+      "sha256": "8e60db603b9ae8ef98ec72aef49d2650e3a0d1481ad875caf340a6838d3beb6f"
+    },
+    {
+      "path": "storyTemplates/brothers-conflict-en",
+      "sha256": "9b2cd6540e4c8185fd2465b5ef1ec14c2b76d774d76025d6dc2a47baeb815e4c"
+    },
+    {
+      "path": "storyTemplates/eight-horses-en",
+      "sha256": "366b384ab76d7cc849878521b0d76a428951aa16b946a0584e7cb42d5da38bfd"
+    },
+    {
+      "path": "storyTemplates/erdene-bell",
+      "sha256": "f537eebde4c141d57e94125b56c2c28cef4217c58dc01d39c880b5897e64bde3"
+    },
+    {
+      "path": "storyTemplates/erdene-notebook",
+      "sha256": "7b36c2dab81d9963d38f8e90123d81f938113a66a8c4f42eee15c08ad189e4ef"
+    },
+    {
+      "path": "storyTemplates/hoelun-family-en",
+      "sha256": "83123024fd3f396c4055ec52c26c31cc845d940f6996427e8979f6479c6f6455"
+    },
+    {
+      "path": "storyTemplates/kharkhorin-notebook",
+      "sha256": "74f69d8031e3bc673f20a138a3ac27a1c3f4c9ce8273976dff46bfecc4963c0e"
+    },
+    {
+      "path": "storyTemplates/onon-child-en",
+      "sha256": "105f48c29c33e26a1668f914df17204439640d642d63c7cf10679e66ada6d8ad"
+    },
+    {
+      "path": "storyTemplates/onon-child-lyrical-en",
+      "sha256": "c2fbc3c880bb92bc348044cc2a5e7d15097c422f478f350bd44bb19f89dbfd66"
+    },
+    {
+      "path": "storyTemplates/river-message",
+      "sha256": "5e1dd989e425c521506b8be49e16a9edd536963d0ff354d14e8d092dc3cb9128"
+    },
+    {
+      "path": "storyTemplates/silver-tree",
+      "sha256": "7a1344036545a332afff5ddddf02ec765d4a03a6d64aa556e938b6904ce202c9"
+    },
+    {
+      "path": "storyTemplates/steppe-return",
+      "sha256": "5969a72d8071ab64fdc262db6c671c1b1e48159eba7d96aabe35ebbbf7a5de6b"
+    },
+    {
+      "path": "storyTemplates/taichiud-escape-en",
+      "sha256": "290dd166fee84fce7110ec928c38216374df24dd1bb725a166f7080281bc473a"
+    },
+    {
+      "path": "storyTemplates/tovkhon-notebook",
+      "sha256": "6e6c98ff8736c774df33a343e9cb3e25e52d9a56dc6c922e78f1cd7ec04b45de"
+    },
+    {
+      "path": "storyTemplates/tovkhon-path",
+      "sha256": "d45bc203d4de55bb18938c1991f2477064d3206a976d20a24b87faca938991c5"
+    },
+    {
+      "path": "storyTemplates/waterfall-notebook",
+      "sha256": "0f97a2f1d4ad02e779c7bf38651f9192bbc5dd65b2621a1baffd7089a0476bd0"
+    },
+    {
+      "path": "storyTemplates/waterfall-ribbon",
+      "sha256": "6b6d316adf2cfae90aad2858f4ea8a7cfbdf1afd6bd992bc17e0cc95f59916c6"
+    },
+    {
+      "path": "storyTemplates/workshop",
+      "sha256": "404e425e4ca6fa7abc00e5638fed2ca1290d87b1f81f93537d8a2e38a2b22039"
+    }
+  ],
+  "media": [
+    {
+      "path": "catalog/audio/daniel/brothers-conflict-en.m4a",
+      "bytes": 2040205,
+      "sha256": "ab861cb65587ca4c5daff96502d8989bf22fec13b43c07ab47e2b1ee0ab2e6f9",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/eight-horses-en.m4a",
+      "bytes": 2049803,
+      "sha256": "4c2181024614e32685eabbb8ef032861b84b3532e74c2ae5e4e43aba9d8a5a8c",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/erdene-bell.m4a",
+      "bytes": 250700,
+      "sha256": "0ea16dd3eb8f4bb66e5a063d5dac86b8a6ab24172c5650727f8b693f1f4f66eb",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/erdene-notebook.m4a",
+      "bytes": 219950,
+      "sha256": "4db7ba702ad9a5c79e5b3123a2009d9f1c91e783bc7652d5beb05891fc18c97a",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/hoelun-family-en.m4a",
+      "bytes": 2037973,
+      "sha256": "19ff2a04a9e4665070d9030fcf49cf1ca09bf5840bb3292f9b7adcccbf2e1252",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/kharkhorin-notebook.m4a",
+      "bytes": 236527,
+      "sha256": "3ebbd530ef05851d85558e26597631d863ca7544c6172a030851abc8b909fd0c",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/onon-child-en.m4a",
+      "bytes": 2047605,
+      "sha256": "4d486d36643730dddb42f6801bfa23be0578110150c904963e600b2769606901",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/onon-child-lyrical-en.m4a",
+      "bytes": 2046056,
+      "sha256": "8e833de724fa30c2f22fe2356952a5e56b0f4c00f9ce44af6cb1a0ff71bd9cd3",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/river-message.m4a",
+      "bytes": 265923,
+      "sha256": "5f0cf747a8dccae9d642c1d283a1a51651ed2eedaa39e2171d3224db99c5c404",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/silver-tree.m4a",
+      "bytes": 245773,
+      "sha256": "36013da98ad2713d7343adcc08b6758c5d544526c2812e82253a08a37d2ae868",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/steppe-return.m4a",
+      "bytes": 262903,
+      "sha256": "d304ab9f5cf7cf35adecc1232e534b1dd70b2078a07ec9b0447fd7f18d3a3434",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/taichiud-escape-en.m4a",
+      "bytes": 2039087,
+      "sha256": "32a3dd0bad42d9f7358792cf6c438cdfedece109b45e8eb9ec4d5f05915a1f67",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/tovkhon-notebook.m4a",
+      "bytes": 216051,
+      "sha256": "793af06835a0850be5dc6960a1ea46ac5f70182991cb7692d90f5911e37bd5c2",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/tovkhon-path.m4a",
+      "bytes": 224076,
+      "sha256": "16381fe495ada4467d762d3f0740671038f45bf6a736787695b395fc9459631d",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/waterfall-notebook.m4a",
+      "bytes": 211412,
+      "sha256": "c784b41de68ca7ad3270b5f7e01958b033616c1b5397694297c6cd87f531d375",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/waterfall-ribbon.m4a",
+      "bytes": 255020,
+      "sha256": "f59bc3c9033d7b15813ce6c5292b5f47fea2f716ef50a2f8f12148bb5c1ea236",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/daniel/workshop.m4a",
+      "bytes": 267513,
+      "sha256": "651ec461084eb84f5dc9e0b45fce5625d07a2c65b040c32e238a86bd2336e87d",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/brothers-conflict-en.m4a",
+      "bytes": 2016022,
+      "sha256": "4ec0ce8c557100dc18568aa1f5e63d17b978613838c659103e962fceba260f4d",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/eight-horses-en.m4a",
+      "bytes": 2014090,
+      "sha256": "327640e386f59d8067a3338d7af2e20a3826c427db853c752c18d8526b9f33c9",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/erdene-bell.m4a",
+      "bytes": 247956,
+      "sha256": "e65a4e717991e083e69a51329dd6380470e896fd7dc969a43b2dbbef18c40a6d",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/erdene-notebook.m4a",
+      "bytes": 210005,
+      "sha256": "303e6bca1c59fac376d744a2dad787c343c2b0949d1bb9506459884bf1726910",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/hoelun-family-en.m4a",
+      "bytes": 2018226,
+      "sha256": "e0c1292bb6b4c2d06600d675f2cb8981480c16815666bccf701b16c9f9d86540",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/kharkhorin-notebook.m4a",
+      "bytes": 223103,
+      "sha256": "f2e49b1cd865588bf8374fae0b4da1fb5621775e692d0553facce09080b1a7d8",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/onon-child-en.m4a",
+      "bytes": 2011185,
+      "sha256": "f874adb639c2d547a9f6ee7baaa033b57a9bc733f8bd74ce93e4cad326f9503f",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/onon-child-lyrical-en.m4a",
+      "bytes": 2010396,
+      "sha256": "f8440eadf4ec6530c3f6fb0e8b64094f476c1ac3d2a06ded6f8223320158c0db",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/river-message.m4a",
+      "bytes": 251802,
+      "sha256": "89cb47947dc3f45cefc969082086239ef94150f1254bf82d69adfeb322cd2647",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/silver-tree.m4a",
+      "bytes": 235045,
+      "sha256": "3a570e8b1279ddc8e12aa1222140d02af18c9618d3e11f64e700a8baf72aaaca",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/steppe-return.m4a",
+      "bytes": 251139,
+      "sha256": "1e4389058ec674cbe99bc39da9066ff13da9d3e9667eba29d11128ab1a1fa06e",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/taichiud-escape-en.m4a",
+      "bytes": 2018420,
+      "sha256": "281f88dc009d8593aa14799496279b44236af7b7727fe8a97a85a731316e515e",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/tovkhon-notebook.m4a",
+      "bytes": 211192,
+      "sha256": "90b265b159306d20e5d72c5803cdc396a70808cfcefa6930558648f833d67b2c",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/tovkhon-path.m4a",
+      "bytes": 218772,
+      "sha256": "08089dc8dc3b4567d0bd36526593707d835e9ff1748b69659fb4f001eff1fc40",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/waterfall-notebook.m4a",
+      "bytes": 204513,
+      "sha256": "8a6662760451597f7094f999f259ddd54c846332afaee254f80aeb653c44fc9c",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/waterfall-ribbon.m4a",
+      "bytes": 244668,
+      "sha256": "af58918b4ceaf029da6bfa0db417247392cc8d2245e283ff6a86559db4935052",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/karen/workshop.m4a",
+      "bytes": 253809,
+      "sha256": "445f6b420dc6d40124ad02081daed12af6f5ebe21b9c042f902df45091d50428",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/brothers-conflict-en.m4a",
+      "bytes": 2048290,
+      "sha256": "44717b043ae0a6dc8b1feb6e4d6bb2fec304d43ce75a02bf1bbfca912a7ea98c",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/eight-horses-en.m4a",
+      "bytes": 2049439,
+      "sha256": "966977d22f7861cd57b1f1b0a465e7e1d8d5f7b2de3501172fb2bdfb936fcd9c",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/erdene-bell.m4a",
+      "bytes": 257156,
+      "sha256": "13f54e416282646d5a9436a84ac01f70fd8aedca7fc2fed30c30381c9aaee23b",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/erdene-notebook.m4a",
+      "bytes": 225051,
+      "sha256": "3010f6961d5988b8156928fb4c6c0fad06284a7d808573783bc264e9601026e2",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/hoelun-family-en.m4a",
+      "bytes": 2048760,
+      "sha256": "2a935765edb405606dff22888d7fac675542257433cbd14c15d7ee8ca580315a",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/kharkhorin-notebook.m4a",
+      "bytes": 237957,
+      "sha256": "16b77b5bcc554c0071a5b908b16b0adf0b83578945ca886fcca4c318035dcf86",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/onon-child-en.m4a",
+      "bytes": 2041680,
+      "sha256": "f2bf3f477b841e0d71bb3418032b6e109091cc25e5a2e730c16b5b006d880837",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/onon-child-lyrical-en.m4a",
+      "bytes": 2038515,
+      "sha256": "576afea4aaeb93eb49f4933a6dc24cc54a2743dd7c42049998338862eeaeaccd",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/river-message.m4a",
+      "bytes": 264100,
+      "sha256": "ac2eb430f4590381992393b33c93c8ed1887991131920b5687b071f63e410bdf",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/silver-tree.m4a",
+      "bytes": 246381,
+      "sha256": "d5b30f24273921ad589eaafd6b7abd2b05a3fdd1bdd3234de2d95e7b16731dcf",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/steppe-return.m4a",
+      "bytes": 260192,
+      "sha256": "18ad3fe6937fcff579d436a8de446651587fa5fba0a78739ee4eb73f94e3b31f",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/taichiud-escape-en.m4a",
+      "bytes": 2046591,
+      "sha256": "c6f8f894536910a5f2d7525132f55149f25ce48729d41189d8d2ead6e49d70bd",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/tovkhon-notebook.m4a",
+      "bytes": 221431,
+      "sha256": "b250f28643736ae1616e9d2372e9968224ced9d253278b0c87eeac9a43525dfc",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/tovkhon-path.m4a",
+      "bytes": 237419,
+      "sha256": "f148c9e4e7cac68a8593f2387250b4f8e1feef2c2131c1a69438bad959745160",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/waterfall-notebook.m4a",
+      "bytes": 215858,
+      "sha256": "75e19e62cf1dd88b59e6efd415889220fe8c866511b76cd5396d2c28893cb2c7",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/waterfall-ribbon.m4a",
+      "bytes": 253690,
+      "sha256": "8961e2a89e3f4b0b10cfe7399dcc763e4e3e20cdeae3366875145a09479c15cf",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/moira/workshop.m4a",
+      "bytes": 277769,
+      "sha256": "e477890455ebdf2770e888104b85231087fe591fb29c48574d77fd702edb52ff",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/brothers-conflict-en.m4a",
+      "bytes": 2044205,
+      "sha256": "ac330cf12c4b5bfcf6d3ab0147d4186a6642416eb185d04c220bb7cb6c18e635",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/eight-horses-en.m4a",
+      "bytes": 2044698,
+      "sha256": "dc4ea059d721833923ca876b7cae11e5fa73a6cacc5e18c31ba901aa5f66e3ce",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/erdene-bell.m4a",
+      "bytes": 253270,
+      "sha256": "c46a8b3fb39e36315e42320fb255e2cfa379039cc57adb95f619ac1e6015bc27",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/erdene-notebook.m4a",
+      "bytes": 211533,
+      "sha256": "4a1dad657385ed2971fca28a46bbd15d28e050a845b5b2a1048d67fe938a7943",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/hoelun-family-en.m4a",
+      "bytes": 2049570,
+      "sha256": "9571b6e9cbecb6f7ad175e6ed985a26a927d76ec207616130cb2a7bf237de41f",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/kharkhorin-notebook.m4a",
+      "bytes": 222814,
+      "sha256": "30de58ad16a30b31742be8e9243794a2ec62640eebdd8bb160ac8d59d96be9da",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/onon-child-en.m4a",
+      "bytes": 2040785,
+      "sha256": "ae1d73c5cd3d6ef8663de249f6108060cd0c7d462929a5345d779a445453e7aa",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/onon-child-lyrical-en.m4a",
+      "bytes": 2044958,
+      "sha256": "d1af938234058fd08d5a460f0433de70d1bb1eaa2d92d4d05afb7f5577d90503",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/river-message.m4a",
+      "bytes": 255063,
+      "sha256": "3cb61a2f826915372cd5793976d335428194d54130d1682b45aa141d44749638",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/silver-tree.m4a",
+      "bytes": 237404,
+      "sha256": "b78e896ad2ebe12509a45ba66ee63cb1a24f3edd534d0690f896f2ad54807999",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/steppe-return.m4a",
+      "bytes": 251580,
+      "sha256": "7789b83851ea64a5ce02f1b3618126516538371bad2c157d208106969fd24d34",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/taichiud-escape-en.m4a",
+      "bytes": 2045632,
+      "sha256": "b4a9fd3e6ecef750b18e5b62fe09100f867c1c58950cc070328e0b7cb99a9ab2",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/tovkhon-notebook.m4a",
+      "bytes": 207880,
+      "sha256": "c58408bf1c50fa592f792ca0c28bd2a6889d273d6f96f344720bcf15c4edc3d3",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/tovkhon-path.m4a",
+      "bytes": 220080,
+      "sha256": "4e738b04075ad8fffdf164f94a434697bdb4d5d21b7f14008b031e0a83eed1f4",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/waterfall-notebook.m4a",
+      "bytes": 200100,
+      "sha256": "02c1281033fe9de28d7073915b58efc9fbb9b2d02024f47edd75e6e8455b9bd9",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/waterfall-ribbon.m4a",
+      "bytes": 243602,
+      "sha256": "410b10a5200dfea4d566300b90f0ddca3dac59d956c121d01de8c9b1e855402e",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/audio/samantha/workshop.m4a",
+      "bytes": 255838,
+      "sha256": "a749e9358ec0cb32d79751afa549ccbe5f8ecb901584ef7583f31c4ae06662e7",
+      "contentType": "audio/mp4"
+    },
+    {
+      "path": "catalog/images/landscape.jpg",
+      "bytes": 248960,
+      "sha256": "6abe44b191bd205d64f38033d992050705e177a46258a1495a5a7dc5f25007ac",
+      "contentType": "image/jpeg"
+    },
+    {
+      "path": "catalog/images/monastery.jpg",
+      "bytes": 268949,
+      "sha256": "64177b486dd4f724ad27207fc92353ebbb856bb88448e3cf464759ecc8d7361a",
+      "contentType": "image/jpeg"
+    },
+    {
+      "path": "catalog/images/silver-tree.jpg",
+      "bytes": 224909,
+      "sha256": "3d7d3b58e97b59610a7b84f7d8ebd88710452f126daf48dcbf318fbe53d17ed0",
+      "contentType": "image/jpeg"
+    },
+    {
+      "path": "catalog/images/steppe.jpg",
+      "bytes": 163759,
+      "sha256": "afc284388d7217d7872d0da47924d3121cc9111322b2cd1e6125fcd129d2f7d1",
+      "contentType": "image/jpeg"
+    }
+  ],
+  "totals": {
+    "documents": 39,
+    "mediaObjects": 72,
+    "mediaBytes": 60262788,
+    "historicalChapters": 5,
+    "historicalTemplates": 6,
+    "historicalRecordings": 24
+  },
+  "excluded": [
+    "Auth users",
+    "users",
+    "chronicles",
+    "generationRequests",
+    "bookmarks and playback progress",
+    "source PDF and full extracted text"
+  ],
+  "manifestSha256": "6ea0ed6494b1363be3df1a63fe30efcc65b03fff52edfc46ced12574b9451b2f"
+}

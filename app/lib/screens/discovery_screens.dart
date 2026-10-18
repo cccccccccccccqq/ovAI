@@ -32,7 +32,7 @@ class _SteppeScreenState extends State<SteppeScreen> {
     final state = AppScope.of(context);
     final site = state.siteById(id);
     unawaited(state.selectSite(id));
-    _map.move(LatLng(site.lat, site.lng), 13);
+    _map.move(LatLng(site.lat, site.lng), site.isApproximate ? 7 : 13);
     if (clearFilters && (_era != 'All eras' || _search.text.isNotEmpty)) {
       setState(() {
         _era = 'All eras';
@@ -84,9 +84,12 @@ class _SteppeScreenState extends State<SteppeScreen> {
     final selected =
         sites.where((site) => site.id == state.selectedSite.id).firstOrNull ??
         sites.firstOrNull;
+    final historical =
+        selected != null &&
+        state.defaultTemplateForSite(selected.id).isHistorical;
     final eras = ['All eras', ...state.sites.map((site) => site.era).toSet()];
     return AppScaffold(
-      eyebrow: 'Öv · Orkhon Valley',
+      eyebrow: 'Öv · Stories of Mongolia',
       title: 'Find your story.',
       showBack: false,
       actions: [
@@ -99,6 +102,23 @@ class _SteppeScreenState extends State<SteppeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (state.historyCatalogError != null) ...[
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'The history collection is temporarily unavailable.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => state.loadHistoricalCatalog(),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
           TextField(
             controller: _search,
             onChanged: (_) => setState(() {}),
@@ -253,9 +273,11 @@ class _SteppeScreenState extends State<SteppeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Follow the Silver Tree',
-                        style: TextStyle(
+                      Text(
+                        historical
+                            ? 'Follow young Temujin'
+                            : 'Follow the Silver Tree',
+                        style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -264,7 +286,9 @@ class _SteppeScreenState extends State<SteppeScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Three chapters. One unfolding journey.',
+                        historical
+                            ? 'Five chapters. One unfolding journey.'
+                            : 'Three chapters. One unfolding journey.',
                         style: TextStyle(
                           fontSize: 12,
                           height: 1.5,
@@ -275,7 +299,21 @@ class _SteppeScreenState extends State<SteppeScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => context.push('/journey'),
+                  onPressed: () {
+                    if (!historical) {
+                      context.push('/journey');
+                      return;
+                    }
+                    final first = state.defaultTemplateForSite(selected.id);
+                    final saved = state.library
+                        .where((story) => story.templateId == first.id)
+                        .firstOrNull;
+                    context.push(
+                      saved == null
+                          ? '/demo/${first.id}'
+                          : '/journey/${saved.id}',
+                    );
+                  },
                   icon: const Icon(
                     Icons.arrow_forward_rounded,
                     color: OvColors.cream,
@@ -373,7 +411,8 @@ class _PlaceCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${site.nameMn}  ·  ${site.lat.toStringAsFixed(4)}°N ${site.lng.toStringAsFixed(4)}°E',
+                  site.locationNote ??
+                      '${site.nameMn}  ·  ${site.lat.toStringAsFixed(4)}°N ${site.lng.toStringAsFixed(4)}°E',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 12),
@@ -418,7 +457,7 @@ class _SearchEmpty extends StatelessWidget {
         Text('No places found', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
         const Text(
-          'Try another name or explore all four\nplaces in the Orkhon Valley.',
+          'Try another name or explore all places in the collection.',
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 18),

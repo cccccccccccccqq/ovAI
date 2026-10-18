@@ -67,7 +67,7 @@ class DownloadController extends ChangeNotifier {
             'siteId': siteId,
             'title': template.title,
             'text': template.plainText,
-            'kind': 'prepared-demo',
+            'kind': template.contentKind,
           }),
         ),
       );

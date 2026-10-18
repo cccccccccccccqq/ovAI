@@ -33,7 +33,7 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body style="margin:0;background:#F2EFE7;">
-  <div id="loading" style="position:fixed;inset:0;display:grid;place-content:center;text-align:center;font-family:system-ui;color:#1F4D2E"><b style="font-size:64px">öv</b><p>Stories of the steppe</p><small>Preparing your local demo…</small></div>
+  <div id="loading" style="position:fixed;inset:0;display:grid;place-content:center;text-align:center;font-family:system-ui;color:#1F4D2E"><b style="font-size:64px">öv</b><p>Stories of the steppe</p><small>Preparing your stories…</small></div>
   <script>window.addEventListener("flutter-first-frame",()=>document.getElementById("loading")?.remove());</script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
@@ -43,6 +43,58 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
+  <script>
+    // Only explicitly selected BACKEND_MODE=emulator uses these named demo apps.
+    // Use the public Firebase JS SDK to connect Auth before persisted-user
+    // restoration starts; FlutterFire's web initializeApp also waits for Auth.
+    window.prepareOvChapterEmulator = async function (host, name = "ov-history-local") {
+      if (!["127.0.0.1", "localhost", "::1", "[::1]"].includes(host)) {
+        throw new Error("The chapter pilot requires a loopback emulator host.");
+      }
+      // Keep the fallback aligned with firebase_core_web's supported SDK.
+      const version = window.flutterfire_web_sdk_version || "13.0.0";
+      if (!/^\d+\.\d+\.\d+$/.test(version)) {
+        throw new Error("Unexpected Firebase JS SDK version.");
+      }
+      const base = `https://www.gstatic.com/firebasejs/${version}`;
+      const [core, auth] = await Promise.all([
+        import(`${base}/firebase-app.js`),
+        import(`${base}/firebase-auth.js`),
+      ]);
+      if (!/^ov-history-[A-Za-z0-9_-]{1,450}$/.test(name)) {
+        throw new Error("Unexpected local history account namespace.");
+      }
+      const originHost = host.includes(":") && !host.startsWith("[") ? `[${host}]` : host;
+      const origin = `http://${originHost}:9099`;
+      const existing = core.getApps().find(app => app.name === name);
+      if (existing) {
+        const current = auth.getAuth(existing);
+        const configured = current.emulatorConfig;
+        const normalizeHost = value => value.replace(/^\[|\]$/g, "");
+        if (configured && configured.protocol === "http" && configured.port === 9099 &&
+            normalizeHost(configured.host) === normalizeHost(host)) return;
+        // Deleting an SDK app leaves its persisted local account intact.
+        await core.deleteApp(existing);
+      }
+      const app = core.initializeApp({
+        apiKey: "ADemoProjectApiKey000000000000000000000",
+        appId: "1:1:web:1",
+        messagingSenderId: "1",
+        projectId: "demo-ov-chronicles",
+        authDomain: "demo-ov-chronicles.firebaseapp.com",
+        databaseURL: null,
+        measurementId: null,
+        storageBucket: "demo-ov-chronicles.appspot.com",
+      }, name);
+      const localAuth = auth.initializeAuth(app, {
+        errorMap: auth.debugErrorMap,
+        persistence: [auth.indexedDBLocalPersistence, auth.browserLocalPersistence, auth.browserSessionPersistence],
+        popupRedirectResolver: auth.browserPopupRedirectResolver,
+      });
+      // Synchronous: runs before Auth's persistence-restoration microtask.
+      auth.connectAuthEmulator(localAuth, origin);
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

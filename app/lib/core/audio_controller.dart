@@ -62,7 +62,9 @@ class AudioController extends ChangeNotifier {
   }
 
   Future<void> _remember() async {
-    if (_disposed) return;
+    // Loading resets the platform player to zero. Preserve the saved resume
+    // position when the new source has not loaded or failed to decode.
+    if (_disposed || loading || error != null) return;
     final id = currentStoryId;
     final story = id == null ? null : state.storyById(id);
     if (story != null) {
@@ -111,8 +113,12 @@ class AudioController extends ChangeNotifier {
     try {
       await player.stop();
       if (!_active(request)) return;
+      final remote = await state.remoteAudioUriFor(story);
+      if (!_active(request)) return;
       final duration = await player.setAudioSource(
-        AudioSource.asset(state.audioAssetFor(story)),
+        remote == null
+            ? AudioSource.asset(state.audioAssetFor(story))
+            : AudioSource.uri(remote),
         initialPosition: Duration(milliseconds: story.audioPositionMs),
       );
       if (!_active(request)) return;
