@@ -46,7 +46,7 @@
 
 ## 5. App icon
 
-- [x] ✅ Бүх iOS icon RGB, alpha суваггүй (PR #2-ийн ger icon)
+- [x] ✅ Бүх iOS icon RGB, alpha суваггүй. Брэндбүүкийн ger тэмдэг, ногоон дэвсгэр дээр цагаан (`scripts/make-app-icons.py`)
 - [ ] 👤 Launch screen-ийг бодит төхөөрөмж дээр шалгах
 
 ## 6. Info.plist ба нууцлал
