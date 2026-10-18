@@ -1,0 +1,70 @@
+# Builds the Flutter web app and deploys it to Firebase Hosting (ov-ai-5ae61).
+# - Push to main: analyze + test, then deploy to the live site.
+# - Pull request: analyze + test, then deploy a temporary preview channel.
+# The FIREBASE_SERVICE_ACCOUNT_OV_AI_5AE61 secret is created by
+# `firebase init hosting:github`.
+name: Deploy web
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.41.7"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: app
+        run: flutter analyze
+
+      - name: Test
+        working-directory: app
+        run: flutter test
+
+      - name: Build web
+        working-directory: app
+        run: flutter build web --release --no-wasm-dry-run
+
+      - name: Deploy to live site
+        if: github.event_name != 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OV_AI_5AE61 }}
+          projectId: ov-ai-5ae61
+          channelId: live
+
+      # Forked PRs have no access to secrets, so only same-repo PRs get previews.
+      - name: Deploy preview channel
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OV_AI_5AE61 }}
+          projectId: ov-ai-5ae61
+          expires: 7d
