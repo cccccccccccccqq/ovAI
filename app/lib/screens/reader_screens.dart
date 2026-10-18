@@ -644,7 +644,7 @@ class _ReaderEndScreenState extends State<ReaderEndScreen> {
                 Text(
                   template.isHistorical
                       ? 'This is an original English synopsis of the events described in The Secret History of the Mongols. It is not a direct quotation or a reconstruction of exact travel routes. The reading notes identify source sections and uncertain locations.'
-                      : 'This is original writing prepared for the ÖV prototype. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or live AI verification.',
+                      : 'This is original writing prepared for the öv AI prototype. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or live AI verification.',
                   style: TextStyle(
                     color: OvColors.cream.withValues(alpha: .8),
                     fontSize: 13,

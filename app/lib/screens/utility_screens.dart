@@ -840,8 +840,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SectionHeading(title: 'About this prototype'),
           Text(
             app.usesCloudBackend
-                ? 'ÖV · v0.1\nPrepared stories and recorded narration. Stories and reading progress are saved to your account. Reading settings, drafts, saved places and downloads stay on this device.'
-                : 'ÖV · v0.1\nPrepared editorial stories and system narration. Profiles, stories and progress are stored locally. AI generation and account sync are planned for a later version.',
+                ? 'öv AI · v0.1\nPrepared stories and recorded narration. Stories and reading progress are saved to your account. Reading settings, drafts, saved places and downloads stay on this device.'
+                : 'öv AI · v0.1\nPrepared editorial stories and system narration. Profiles, stories and progress are stored locally. AI generation and account sync are planned for a later version.',
             style: TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 26),

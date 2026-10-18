@@ -54,7 +54,7 @@ class _ShareScreenState extends State<ShareScreen> {
             margin: const pw.EdgeInsets.all(44),
             build: (_) => [
               pw.Text(
-                'ÖV · PREPARED DEMO CHRONICLE',
+                'öv AI · PREPARED DEMO CHRONICLE',
                 style: const pw.TextStyle(
                   fontSize: 10,
                   color: PdfColors.green800,
@@ -235,7 +235,7 @@ class _ShareScreenState extends State<ShareScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'öv',
+                            'öv AI',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 40,

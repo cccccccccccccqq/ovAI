@@ -1,6 +1,6 @@
 import '../history/chapter_models.dart';
 
-/// Curated content and local records for the ÖV interactive prototype.
+/// Curated content and local records for the öv AI interactive prototype.
 /// Historical passages are editorial demo material, not generated research.
 class Site {
   const Site({

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../auth/auth_scope.dart';
 import '../core/app_scope.dart';
@@ -51,12 +52,12 @@ class WelcomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              const _GeretWordmark(),
+                              const _OvWordmark(),
                               const Spacer(),
                               const Align(
                                 alignment: Alignment.centerLeft,
                                 child: DemoBadge(
-                                  text: 'ÖV AI · INTERACTIVE PROTOTYPE',
+                                  text: 'öv AI · Interactive prototype',
                                 ),
                               ),
                               const SizedBox(height: 18),
@@ -129,68 +130,31 @@ class WelcomeScreen extends StatelessWidget {
   );
 }
 
-class _GeretWordmark extends StatelessWidget {
-  const _GeretWordmark();
+class _OvWordmark extends StatelessWidget {
+  const _OvWordmark();
 
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      SizedBox(
-        width: 47,
-        height: 47,
-        child: CustomPaint(painter: _GerMarkPainter()),
+      SvgPicture.asset(
+        'assets/icons/ger_mark.svg',
+        width: 58,
+        semanticsLabel: 'öv AI',
       ),
-      SizedBox(width: 12),
-      Text(
-        'geret',
+      const SizedBox(width: 12),
+      const Text(
+        'öv AI',
         style: TextStyle(
           fontFamily: 'Poppins',
           color: OvColors.cream,
           fontSize: 39,
           fontWeight: FontWeight.w500,
-          letterSpacing: -1.7,
+          letterSpacing: -1.2,
         ),
       ),
     ],
   );
-}
-
-class _GerMarkPainter extends CustomPainter {
-  const _GerMarkPainter();
-  @override
-  void paint(Canvas canvas, Size size) {
-    final p = Paint()
-      ..color = OvColors.cream
-      ..strokeWidth = 2.2
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..style = PaintingStyle.stroke;
-    final w = size.width, h = size.height;
-    canvas.drawPath(
-      Path()
-        ..moveTo(w * .13, h * .42)
-        ..lineTo(w * .5, h * .15)
-        ..lineTo(w * .87, h * .42)
-        ..lineTo(w * .87, h * .85)
-        ..lineTo(w * .13, h * .85)
-        ..close(),
-      p,
-    );
-    canvas.drawLine(Offset(w * .13, h * .45), Offset(w * .87, h * .45), p);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(w * .42, h * .58, w * .16, h * .27),
-        const Radius.circular(3),
-      ),
-      p,
-    );
-    canvas.drawLine(Offset(w * .44, h * .13), Offset(w * .56, h * .13), p);
-    canvas.drawLine(Offset(w * .5, h * .15), Offset(w * .5, h * .04), p);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class DemoProfileScreen extends StatefulWidget {

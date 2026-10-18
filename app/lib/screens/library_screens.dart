@@ -682,7 +682,7 @@ class ProfileScreen extends StatelessWidget {
                   subtitle: auth != null && state.isGuest
                       ? 'Continue with Google or Apple'
                       : name,
-                  onTap: () => context.push('/profile-setup?next=%2Forda'),
+                  onTap: () => context.push('/profile-setup?next=%2Fprofile'),
                 ),
                 const Divider(height: 1, indent: 56),
                 _ProfileRow(
@@ -793,9 +793,9 @@ class ProfileScreen extends StatelessWidget {
           Text(
             state.usesCloudBackend
                 ? auth?.isSignedIn == true
-                      ? 'Öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.'
-                      : 'Öv AI · v0.1\nSign in to save stories and reading progress to your account.'
-                : 'Öv AI · Prototype v0.1\nYour stories and preferences are stored on this device.',
+                      ? 'öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.'
+                      : 'öv AI · v0.1\nSign in to save stories and reading progress to your account.'
+                : 'öv AI · Prototype v0.1\nYour stories and preferences are stored on this device.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall,
           ),

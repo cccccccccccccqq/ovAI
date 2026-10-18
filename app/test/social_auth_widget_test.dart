@@ -191,11 +191,11 @@ void main() {
         findsNothing,
       );
       await _tap(tester, 'Continue with Google');
-      await _tap(tester, 'Orda');
+      await _tap(tester, 'Profile');
       expect(find.text('CONNECTED ACCOUNT'), findsOneWidget);
       expect(
         find.text(
-          'Öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.',
+          'öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.',
         ),
         findsOneWidget,
       );
@@ -265,7 +265,7 @@ void main() {
       expect(find.byType(SteppeScreen), findsOneWidget);
       expect(_state(tester).profileName, 'Saran');
       expect(auth.identity?.uid, 'account-a');
-      await _tap(tester, 'Orda');
+      await _tap(tester, 'Profile');
       expect(find.text('Saran'), findsWidgets);
       expect(find.text('account-a@example.test'), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -281,7 +281,7 @@ void main() {
     await _tap(tester, 'Continue with Google');
     final stateA = _state(tester);
     final storyA = await stateA.createChronicle(templateId: 'silver-tree');
-    await _tap(tester, 'Orda');
+    await _tap(tester, 'Profile');
     await _tap(tester, 'Sign out');
     expect(find.byType(WelcomeScreen), findsOneWidget);
 
@@ -292,7 +292,7 @@ void main() {
     expect(stateB.profileName, 'Naran');
     expect(stateB.library, isEmpty);
     await stateB.createChronicle(templateId: 'workshop');
-    await _tap(tester, 'Orda');
+    await _tap(tester, 'Profile');
     await _tap(tester, 'Sign out');
 
     gateway.nextIdentity = _person('account-a', 'Saran');
@@ -315,7 +315,7 @@ void main() {
             };
       final auth = await _mount(tester, gateway);
       expect(find.byType(SteppeScreen), findsOneWidget);
-      await _tap(tester, 'Orda');
+      await _tap(tester, 'Profile');
       await _tap(tester, 'Sign out');
       expect(find.byType(ProfileScreen), findsOneWidget);
       expect(find.text('Saran'), findsWidgets);
