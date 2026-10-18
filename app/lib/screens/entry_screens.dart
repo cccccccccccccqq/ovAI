@@ -57,7 +57,7 @@ class WelcomeScreen extends StatelessWidget {
                               const Align(
                                 alignment: Alignment.centerLeft,
                                 child: DemoBadge(
-                                  text: 'öv AI · Interactive prototype',
+                                  text: 'öv AI · Stories of Mongolian history',
                                 ),
                               ),
                               const SizedBox(height: 18),
@@ -244,7 +244,7 @@ class _DemoProfileScreenState extends State<DemoProfileScreen> {
                 const SizedBox(height: 22),
                 const Align(
                   alignment: Alignment.centerLeft,
-                  child: DemoBadge(text: 'DEMO PROFILE · ON THIS DEVICE'),
+                  child: DemoBadge(text: 'PROFILE · ON THIS DEVICE'),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -309,7 +309,7 @@ class _DemoProfileScreenState extends State<DemoProfileScreen> {
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'This prototype uses a local profile and prepared stories. Cloud accounts and live AI are planned for a later version.',
+                          'Your profile and stories are kept on this device.',
                           style: TextStyle(fontSize: 12, height: 1.65),
                         ),
                       ),

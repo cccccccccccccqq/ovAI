@@ -249,3 +249,44 @@ test("real callable functions enforce ownership, immutable snapshots and atomic 
     assert.equal((await usageReference.get()).get("count"), 100);
   });
 });
+
+test("deleteAccount removes the caller's data and user, and nobody else's", {
+  skip: hasEmulators ? false : "Run through firebase emulators:exec with auth, firestore, functions.",
+}, async () => {
+  assert.ok(db && app);
+  const alice = await signIn();
+  const bob = await signIn();
+  const templateId = `account-${randomUUID()}`;
+  createdDocuments.push(`storyTemplates/${templateId}`);
+  await db.doc(`storyTemplates/${templateId}`).set(preparedFixture(templateId));
+  const chronicleFor: Record<string, string> = {};
+  const requestFor: Record<string, string> = {};
+  for (const user of [alice, bob]) {
+    const requestId = randomUUID();
+    const key = requestKey(user.uid, requestId);
+    chronicleFor[user.uid] = `chronicles/chr_${key}`;
+    requestFor[user.uid] = `generationRequests/${key}`;
+    createdDocuments.push(`chronicles/chr_${key}`, `users/${user.uid}/library/chr_${key}`, `generationRequests/${key}`);
+    await call("ensureProfile", { displayName: "Traveler" }, user.token);
+    const created = await call("createPreparedChronicle", { requestId, templateId, voiceId: "samantha" }, user.token);
+    assert.equal(created.result?.status, "ready");
+  }
+  const aliceChronicle = chronicleFor[alice.uid] ?? "";
+  const aliceRequest = requestFor[alice.uid] ?? "";
+  const bobChronicle = chronicleFor[bob.uid] ?? "";
+
+  assert.equal((await call("deleteAccount", {})).error?.status, "UNAUTHENTICATED");
+  const deleted = await call("deleteAccount", {}, alice.token);
+  assert.equal(deleted.error, undefined);
+
+  assert.equal((await db.doc(`users/${alice.uid}`).get()).exists, false);
+  assert.equal((await db.collection(`users/${alice.uid}/library`).get()).size, 0);
+  assert.equal((await db.doc(aliceChronicle).get()).exists, false);
+  assert.equal((await db.doc(aliceRequest).get()).exists, false);
+  assert.equal((await db.collection("usage").where("uid", "==", alice.uid).get()).size, 0);
+  await assert.rejects(getAuth(app).getUser(alice.uid), (error: { code?: string }) => error.code === "auth/user-not-found");
+
+  assert.equal((await db.doc(`users/${bob.uid}`).get()).exists, true);
+  assert.equal((await db.doc(bobChronicle).get()).exists, true);
+  assert.equal((await getAuth(app).getUser(bob.uid)).uid, bob.uid);
+});

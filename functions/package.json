@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && node --test lib/test/domain.test.js lib/test/chapter-domain.test.js",
+    "test": "npm run build && node --test lib/test/domain.test.js lib/test/chapter-domain.test.js lib/test/account.test.js",
     "test:integration": "npm run build && node --test lib/test/integration.test.js lib/test/chapter.integration.test.js"
   },
   "dependencies": {

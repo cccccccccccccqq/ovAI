@@ -1,0 +1,114 @@
+# Builds the iOS app on a GitHub macOS runner and uploads it to TestFlight.
+# No local Mac or certificate files are needed: Xcode creates the signing
+# certificate and profile through an App Store Connect API key (Admin role).
+# Setup: app/docs/TESTFLIGHT_SETUP.mn.md
+# Run: Actions → "iOS TestFlight" → Run workflow, or push a tag such as ios-v1.0.0-1.
+name: iOS TestFlight
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["ios-v*"]
+
+concurrency:
+  group: ios-testflight
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: "3.41.7"
+  TEAM_ID: 4CS2X8UTJX
+
+jobs:
+  testflight:
+    runs-on: macos-15
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.APP_STORE_CONNECT_KEY_P8 }}
+      MAPS_IOS_KEY: ${{ secrets.GOOGLE_MAPS_IOS_KEY }}
+    steps:
+      - name: Check required secrets
+        run: |
+          missing=""
+          [ -n "$ASC_KEY_ID" ] || missing="$missing APP_STORE_CONNECT_KEY_ID"
+          [ -n "$ASC_ISSUER_ID" ] || missing="$missing APP_STORE_CONNECT_ISSUER_ID"
+          [ -n "$ASC_KEY_P8" ] || missing="$missing APP_STORE_CONNECT_KEY_P8"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secrets:$missing (see app/docs/TESTFLIGHT_SETUP.mn.md)"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          flutter --version
+
+      - name: Install dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Test
+        working-directory: app
+        run: flutter test
+
+      - name: Install App Store Connect API key
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
+          chmod 600 "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
+
+      # Without a Maps key the app falls back to OpenStreetMap, so it is optional.
+      - name: Configure Google Maps key
+        if: env.MAPS_IOS_KEY != ''
+        run: |
+          printf 'GOOGLE_MAPS_API_KEY=%s\n' "$MAPS_IOS_KEY" > app/ios/Flutter/Maps.local.xcconfig
+          echo "MAPS_DEFINE=--dart-define=GOOGLE_MAPS_API_KEY=$MAPS_IOS_KEY" >> "$GITHUB_ENV"
+
+      - name: Build Flutter (unsigned)
+        working-directory: app
+        run: |
+          flutter build ios --release --no-codesign \
+            --build-number=${{ github.run_number }} ${MAPS_DEFINE:-}
+
+      - name: Archive (automatic signing)
+        working-directory: app/ios
+        run: |
+          xcodebuild archive \
+            -workspace Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Runner.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$TEAM_ID"
+
+      - name: Upload to TestFlight
+        working-directory: app/ios
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Runner.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+          echo "Uploaded build ${{ github.run_number }}. It appears in TestFlight after Apple finishes processing (about 10–30 minutes)." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove API key
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"

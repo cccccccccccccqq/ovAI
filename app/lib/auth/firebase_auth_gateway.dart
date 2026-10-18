@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -219,6 +220,72 @@ class FirebaseAuthGateway implements AuthGateway {
     } catch (error) {
       throw _safeFailure(error);
     }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    final auth = _requireAuth();
+    final user = auth.currentUser;
+    if (user == null || user.isAnonymous) {
+      throw const AuthFailure('not-signed-in');
+    }
+    try {
+      final providers = user.providerData.map((data) => data.providerId);
+      final provider = providers.contains(SocialProvider.apple.providerId)
+          ? SocialProvider.apple
+          : SocialProvider.google;
+      // A fresh sign-in proves the owner is present; the server rejects a
+      // deletion whose sign-in is older than five minutes.
+      final reauthenticated = await _reauthenticate(user, provider);
+      if (auth.currentUser?.uid != user.uid ||
+          reauthenticated.user?.uid != user.uid) {
+        throw const AuthFailure('account-changed');
+      }
+      // Apple requires the app to revoke its tokens when the account is deleted.
+      final appleCode = reauthenticated.additionalUserInfo?.authorizationCode;
+      if (provider == SocialProvider.apple &&
+          appleCode != null &&
+          appleCode.isNotEmpty) {
+        await auth.revokeTokenWithAuthorizationCode(appleCode);
+      }
+      await FirebaseFunctions.instanceFor(
+        app: auth.app,
+        region: 'asia-northeast1',
+      ).httpsCallable('deleteAccount').call<dynamic>();
+    } on FirebaseFunctionsException catch (error) {
+      throw AuthFailure('delete-${error.code}');
+    } catch (error) {
+      throw _safeFailure(error);
+    }
+    // The server already removed the user; this only clears the local session.
+    try {
+      await auth.signOut();
+    } catch (_) {}
+  }
+
+  Future<UserCredential> _reauthenticate(
+    User user,
+    SocialProvider provider,
+  ) async {
+    final AuthProvider authProvider = switch (provider) {
+      SocialProvider.google =>
+        GoogleAuthProvider()..setCustomParameters({'prompt': 'select_account'}),
+      SocialProvider.apple => AppleAuthProvider(),
+    };
+    if (kIsWeb) return user.reauthenticateWithPopup(authProvider);
+    if (isEmulator) throw const AuthFailure('native-emulator-provider');
+    if (provider == SocialProvider.apple) {
+      return user.reauthenticateWithProvider(authProvider);
+    }
+    await _initializeGoogle();
+    final googleUser = await GoogleSignIn.instance.authenticate();
+    final idToken = googleUser.authentication.idToken;
+    if (idToken == null || idToken.isEmpty) {
+      throw const AuthFailure('invalid-credential');
+    }
+    return user.reauthenticateWithCredential(
+      GoogleAuthProvider.credential(idToken: idToken),
+    );
   }
 
   FirebaseAuth _requireAuth() {

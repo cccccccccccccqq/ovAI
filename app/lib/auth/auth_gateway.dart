@@ -82,5 +82,9 @@ abstract interface class AuthGateway {
   /// An anonymous user is linked, preserving their UID, or the operation fails.
   Future<AppIdentity> signIn(SocialProvider provider);
   Future<void> signOut();
+
+  /// Confirms the account by signing in again, then permanently deletes it and
+  /// everything it owns. On success the session is closed.
+  Future<void> deleteAccount();
   Future<void> dispose();
 }

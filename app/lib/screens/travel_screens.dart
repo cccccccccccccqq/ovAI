@@ -56,7 +56,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
       if (!mounted || generation != _positionGeneration) return;
       if (!serviceEnabled) {
         throw StateError(
-          'Location services are off. Enable them in device settings, or use the demo arrival below.',
+          'Location services are off. Enable them in device settings, or use Preview arrival below.',
         );
       }
       var permission = await Geolocator.checkPermission();
@@ -68,7 +68,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
         throw StateError(
-          'Location access was declined. You can still explore every place and try a demo arrival.',
+          'Location access was declined. You can still explore every place and preview an arrival.',
         );
       }
       final position = await Geolocator.getCurrentPosition(
@@ -103,7 +103,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
         setState(
           () => _locationMessage = error is StateError
               ? error.message.toString()
-              : 'Unable to find your location. Try again or use demo arrival.',
+              : 'Unable to find your location. Try again or use Preview arrival.',
         );
       }
     } finally {
@@ -214,7 +214,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
             spacing: 12,
             runSpacing: 8,
             children: [
-              DemoBadge(text: _live ? 'DEVICE LOCATION' : 'DEMO ROUTE'),
+              DemoBadge(text: _live ? 'DEVICE LOCATION' : 'PREPARED ROUTE'),
               TextButton(
                 onPressed: () => context.go('/steppe'),
                 child: const Text('Studio view'),
@@ -243,7 +243,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
           const SizedBox(height: 10),
           Text(
             app.offline
-                ? 'Offline demo overview · no map tiles required'
+                ? 'Offline overview · no map tiles required'
                 : 'Preview route between sites · not turn-by-turn directions',
             style: Theme.of(context).textTheme.bodySmall,
           ),
@@ -293,7 +293,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
                   site.locationNote ??
                       (_position == null
                           ? site.era
-                          : '${(Geolocator.distanceBetween(_position!.latitude, _position!.longitude, site.lat, site.lng) / 1000).toStringAsFixed(1)} km · ${_live ? 'from your location' : 'from demo marker'}'),
+                          : '${(Geolocator.distanceBetween(_position!.latitude, _position!.longitude, site.lat, site.lng) / 1000).toStringAsFixed(1)} km · ${_live ? 'from your location' : 'from preview marker'}'),
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 selected: selected.id == site.id,
@@ -320,7 +320,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
           PillButton(
             label: selected.isApproximate
                 ? 'Explore this region'
-                : 'Try arrival at ${selected.name}',
+                : 'Preview arrival at ${selected.name}',
             icon: selected.isApproximate
                 ? Icons.explore_outlined
                 : Icons.near_me_outlined,
@@ -331,7 +331,7 @@ class _FieldMapScreenState extends State<FieldMapScreen> {
           const SizedBox(height: 8),
           Text(
             selected.locationNote ??
-                'Demo arrival uses a prepared location. Your device location is only requested when you tap Use my location.',
+                'Preview arrival uses a prepared location. Your device location is only requested when you tap Use my location.',
             style: const TextStyle(fontSize: 12),
           ),
         ],
@@ -350,7 +350,7 @@ class GeofenceScreen extends StatelessWidget {
     final site = app.selectedSite;
     return AppScaffold(
       title: 'A story is close',
-      eyebrow: live ? 'NEARBY PLACE' : 'DEMO ARRIVAL',
+      eyebrow: live ? 'NEARBY PLACE' : 'PREVIEW ARRIVAL',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

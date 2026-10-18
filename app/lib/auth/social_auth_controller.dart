@@ -110,10 +110,41 @@ class SocialAuthController extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteAccount() async {
+    if (_disposed || _busy || !_initialized || !isSignedIn) return false;
+    _busy = true;
+    _errorMessage = null;
+    _notify();
+    try {
+      await _gateway.deleteAccount();
+      if (!_disposed) _identity = _gateway.currentIdentity;
+      return true;
+    } catch (error) {
+      if (!_disposed) _errorMessage = _deletionMessageFor(error);
+      return false;
+    } finally {
+      _busy = false;
+      _notify();
+    }
+  }
+
   void clearError() {
     if (_errorMessage == null || _disposed) return;
     _errorMessage = null;
     _notify();
+  }
+
+  static String? _deletionMessageFor(Object error) {
+    if (error is AuthFailure && error.isCancelled) return null;
+    final code = error is AuthFailure ? error.code : '';
+    return switch (code) {
+      'user-mismatch' => 'Sign in with the same account you want to delete.',
+      'delete-failed-precondition' || 'requires-recent-login' =>
+        'Please confirm your sign-in again, then retry.',
+      'network-request-failed' || 'network_error' || 'delete-unavailable' =>
+        'Could not connect. Check your connection and try again.',
+      _ => 'Your account could not be deleted. Please try again.',
+    };
   }
 
   static String? _messageFor(Object error) {

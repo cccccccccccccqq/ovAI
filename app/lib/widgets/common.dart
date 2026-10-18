@@ -368,7 +368,7 @@ class SectionHeading extends StatelessWidget {
 }
 
 class DemoBadge extends StatelessWidget {
-  const DemoBadge({super.key, this.text = 'LOCAL DEMO'});
+  const DemoBadge({super.key, this.text = 'ON THIS DEVICE'});
   final String text;
 
   @override

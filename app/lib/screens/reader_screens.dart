@@ -242,7 +242,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 DemoBadge(
                   text: template.isHistorical
                       ? 'Secret History · English synopsis'
-                      : 'Curated demo · original fiction',
+                      : 'Curated · original fiction',
                 ),
                 if (template.historicalScenes.isNotEmpty) ...[
                   const SizedBox(height: 18),
@@ -644,7 +644,7 @@ class _ReaderEndScreenState extends State<ReaderEndScreen> {
                 Text(
                   template.isHistorical
                       ? 'This is an original English synopsis of the events described in The Secret History of the Mongols. It is not a direct quotation or a reconstruction of exact travel routes. The reading notes identify source sections and uncertain locations.'
-                      : 'This is original writing prepared for the öv AI prototype. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or live AI verification.',
+                      : 'This is original writing by the öv AI editors. Its people, dialogue and events are imagined. The reading notes provide background; they are not exact historical quotations or verified facts.',
                   style: TextStyle(
                     color: OvColors.cream.withValues(alpha: .8),
                     fontSize: 13,
@@ -793,7 +793,7 @@ class ChronicleAudioPlayer extends StatelessWidget {
                               ),
                               const SizedBox(height: 3),
                               Text(
-                                '${app.voiceById(story.voiceId).name} · ${app.templateFor(story).isHistorical ? 'English narration' : 'recorded demo'}',
+                                '${app.voiceById(story.voiceId).name} · ${app.templateFor(story).isHistorical ? 'English narration' : 'recorded narration'}',
                                 style: TextStyle(
                                   color: OvColors.cream.withValues(alpha: .55),
                                   fontSize: 11,
@@ -1040,7 +1040,7 @@ Future<void> showStorySources(
               Text(
                 template.isHistorical
                     ? 'Source sections for this original English synopsis. Places are shown as research regions where precise historical locations are uncertain.'
-                    : 'Prepared editorial context for a fictional demo story. These notes are not exact historical quotes, and no live verification was performed.',
+                    : 'Editorial context for a work of fiction. These notes are not exact historical quotes or verified facts.',
                 style: const TextStyle(
                   color: OvColors.body,
                   fontSize: 13,

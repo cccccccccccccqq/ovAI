@@ -1,22 +1,31 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../auth/auth_scope.dart';
 import '../auth/social_auth.dart';
 import '../core/app_scope.dart';
+import '../core/audio_controller.dart';
+import '../core/legal.dart';
 import '../widgets/common.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
+  /// iOS builds always offer Apple next to Google (App Review Guideline 4.8).
+  /// Web and Android need an Apple Services ID first, so they opt in per build.
   static const appleConfigured = bool.fromEnvironment('APPLE_SIGN_IN_ENABLED');
+
+  static bool get appleOnThisPlatform =>
+      appleConfigured ||
+      (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS);
 
   @override
   Widget build(BuildContext context) {
     final auth = AuthScope.of(context);
     final identity = auth.identity;
     final signedIn = auth.isSignedIn;
-    final appleAvailable = auth.isEmulator || appleConfigured;
+    final appleAvailable = auth.isEmulator || appleOnThisPlatform;
     return AppScaffold(
       title: signedIn ? 'Your account.' : 'Make yourself\nat home.',
       eyebrow: signedIn ? 'A home for your journeys' : 'Your journey begins',
@@ -62,6 +71,20 @@ class SignInScreen extends StatelessWidget {
               icon: const Icon(Icons.logout_rounded, size: 20),
               label: const Text('Sign out'),
             ),
+            const SizedBox(height: 28),
+            TextButton.icon(
+              onPressed: auth.busy ? null : () => _deleteAccount(context),
+              icon: const Icon(Icons.delete_forever_outlined, size: 20),
+              label: const Text('Delete account'),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+            ),
+            if (auth.busy)
+              const Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: LinearProgressIndicator(),
+              ),
           ] else ...[
             _ProviderButton(
               label: 'Continue with Google',
@@ -125,10 +148,50 @@ class SignInScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.6),
           ),
+          TextButton(
+            onPressed: () => openPrivacyPolicy(context),
+            child: const Text('Privacy Policy'),
+          ),
         ],
       ),
     );
   }
+}
+
+Future<void> _deleteAccount(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Delete your account?'),
+      content: const Text(
+        'This permanently deletes your account, your saved stories and your reading progress. '
+        'You will be asked to sign in once more to confirm. This cannot be undone.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Keep my account'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+          child: const Text('Delete account'),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return;
+  final auth = AuthScope.of(context);
+  final app = AppScope.of(context);
+  final audio = context.getInheritedWidgetOfExactType<AudioScope>()?.notifier;
+  if (!await auth.deleteAccount()) return;
+  await audio?.stop();
+  // Nothing from the deleted account stays behind on this device either.
+  await app.resetDemo();
+  // Ending the session rebuilds the app, which returns to the welcome screen.
+  if (context.mounted) context.go('/welcome');
 }
 
 class _ProviderButton extends StatelessWidget {

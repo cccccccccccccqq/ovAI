@@ -96,7 +96,7 @@ class _PlaceScreenState extends State<PlaceScreen> {
               ),
               const SizedBox(height: 6),
               const Text(
-                'Bundled artwork for this prototype. Your photo is used only as the cover.',
+                'Bundled artwork. Your photo is used only as the cover.',
                 style: TextStyle(
                   color: OvColors.body,
                   fontSize: 13,
@@ -452,7 +452,7 @@ class ToneScreen extends StatelessWidget {
           Text(
             selected.isHistorical
                 ? 'An original English synopsis of The Secret History of the Mongols. Source sections and uncertain locations are noted in the chapter.'
-                : 'Original demo writing inspired by the setting. Historical context is separated from imagined scenes.',
+                : 'Original writing inspired by the setting. Historical context is separated from imagined scenes.',
             style: TextStyle(
               color: _mutedColor(context),
               fontSize: 13,
@@ -506,7 +506,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
             subtitle: 'A voice to carry your chronicle across the steppe.',
           ),
           const SizedBox(height: 12),
-          const DemoBadge(text: 'Recorded system voices · English demo'),
+          const DemoBadge(text: 'Recorded voices · English'),
           const SizedBox(height: 18),
           for (final voice in app.voices) ...[
             Container(
@@ -825,7 +825,7 @@ class _WritingScreenState extends State<WritingScreen> {
               ),
             const SizedBox(height: 24),
             Text(
-              'This prototype opens a curated story with recorded narration. It does not call an AI service.',
+              'öv AI opens a curated story with recorded narration. No AI service is called.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: OvColors.cream.withValues(alpha: .6),
