@@ -549,7 +549,7 @@ class _HistoricalChapterScreenState extends State<HistoricalChapterScreen>
             ),
             const Divider(),
             Text(
-              'Эхийн хэсэг: Монголын нууц товчоо §${chapter.sourceSections.first}–${chapter.sourceSections.last}.\nЭнэ нь prototype-ийн шинэчилсэн товч өгүүлэмж. Газрын тойргууд нь судалгааны ерөнхий бүс; түүхэн аяллын яг замыг дүрслээгүй.',
+              'Эхийн хэсэг: Монголын нууц товчоо §${chapter.sourceSections.first}–${chapter.sourceSections.last}.\nЭнэ нь öv AI-ийн шинэчилсэн товч өгүүлэмж. Газрын тойргууд нь судалгааны ерөнхий бүс; түүхэн аяллын яг замыг дүрслээгүй.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 28),

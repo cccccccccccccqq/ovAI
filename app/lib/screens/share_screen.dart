@@ -54,7 +54,7 @@ class _ShareScreenState extends State<ShareScreen> {
             margin: const pw.EdgeInsets.all(44),
             build: (_) => [
               pw.Text(
-                'öv AI · PREPARED DEMO CHRONICLE',
+                'öv AI · PREPARED CHRONICLE',
                 style: const pw.TextStyle(
                   fontSize: 10,
                   color: PdfColors.green800,
@@ -187,8 +187,7 @@ class _ShareScreenState extends State<ShareScreen> {
       await Clipboard.setData(ClipboardData(text: url.toString()));
       if (mounted) {
         setState(
-          () => _message =
-              'Demo link copied. It opens this prepared story while the web preview is available.',
+          () => _message = 'Link copied. It opens this story on the web.',
         );
       }
     }
@@ -277,7 +276,7 @@ class _ShareScreenState extends State<ShareScreen> {
                           Text(
                             app.templateFor(story).isHistorical
                                 ? 'SECRET HISTORY · ENGLISH SYNOPSIS'
-                                : 'PREPARED DEMO · ORIGINAL FICTION',
+                                : 'ORIGINAL FICTION',
                             style: const TextStyle(
                               fontSize: 9,
                               letterSpacing: 1,
@@ -300,7 +299,7 @@ class _ShareScreenState extends State<ShareScreen> {
               OutlinedButton.icon(
                 onPressed: _busy ? null : () => _copy(story),
                 icon: const Icon(Icons.copy_outlined),
-                label: const Text('Copy demo story'),
+                label: const Text('Copy story link'),
               ),
               OutlinedButton.icon(
                 onPressed: _busy ? null : () => _export(story, pdf: false),
@@ -331,7 +330,7 @@ class _ShareScreenState extends State<ShareScreen> {
             ),
           const SizedBox(height: 18),
           const Text(
-            'Images and PDFs include the demo label. A copied web link opens the prepared story, without your profile or private local history.',
+            'Images and PDFs are labeled as original fiction. A copied web link opens the prepared story, without your profile or private local history.',
           ),
         ],
       ),

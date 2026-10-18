@@ -276,7 +276,7 @@ class _OvAppState extends State<OvApp> with WidgetsBindingObserver {
             children: [
               const Icon(Icons.explore_outlined, size: 48),
               const SizedBox(height: 16),
-              const Text('That path is not in this demo.'),
+              const Text('That story is not available.'),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => context.go('/steppe'),
@@ -357,9 +357,7 @@ class _OpenPreparedStoryState extends State<OpenPreparedStory> {
       if (!mounted) return;
       final app = AppScope.of(context);
       if (!app.templates.any((template) => template.id == widget.templateId)) {
-        setState(
-          () => _error = 'This prepared story is not in the demo collection.',
-        );
+        setState(() => _error = 'This story is not in the collection.');
         return;
       }
       try {

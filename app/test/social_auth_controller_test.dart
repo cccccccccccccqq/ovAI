@@ -22,6 +22,8 @@ class FakeAuthGateway implements AuthGateway {
   Future<void> Function()? onInitialize;
   Future<AppIdentity> Function(SocialProvider)? onSignIn;
   Future<void> Function()? onSignOut;
+  Future<void> Function()? onDeleteAccount;
+  int deleteAccountCalls = 0;
   int initializationCalls = 0;
   int signInCalls = 0;
   bool disposed = false;
@@ -56,6 +58,13 @@ class FakeAuthGateway implements AuthGateway {
   @override
   Future<void> signOut() async {
     await onSignOut?.call();
+    emit(null);
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    deleteAccountCalls++;
+    await onDeleteAccount?.call();
     emit(null);
   }
 
@@ -298,5 +307,46 @@ void main() {
     expect(AppIdentity.sanitizeDisplayName(' \n '), 'Traveler');
     expect(AppIdentity.sanitizeDisplayName('a' * 65).length, 60);
     expect(AppIdentity.sanitizeDisplayName('🌏' * 61).runes.length, 60);
+  });
+
+  test('account deletion ends the session and reports nothing', () async {
+    final gateway = FakeAuthGateway(restored: _person('to-delete'));
+    final controller = SocialAuthController(gateway);
+    addTearDown(controller.dispose);
+    await controller.initialize();
+    expect(await controller.deleteAccount(), isTrue);
+    expect(gateway.deleteAccountCalls, 1);
+    expect(controller.identity, isNull);
+    expect(controller.isSignedIn, isFalse);
+    expect(controller.busy, isFalse);
+    expect(controller.errorMessage, isNull);
+  });
+
+  test('account deletion failures keep the account and explain why', () async {
+    final gateway = FakeAuthGateway(restored: _person('kept'))
+      ..onDeleteAccount = () async {
+        throw const AuthFailure('user-mismatch');
+      };
+    final controller = SocialAuthController(gateway);
+    addTearDown(controller.dispose);
+    await controller.initialize();
+    expect(await controller.deleteAccount(), isFalse);
+    expect(controller.identity?.uid, 'kept');
+    expect(controller.errorMessage, contains('same account'));
+
+    gateway.onDeleteAccount = () async {
+      throw const AuthFailure('popup-closed-by-user');
+    };
+    expect(await controller.deleteAccount(), isFalse);
+    expect(controller.errorMessage, isNull);
+  });
+
+  test('guests cannot request account deletion', () async {
+    final gateway = FakeAuthGateway();
+    final controller = SocialAuthController(gateway);
+    addTearDown(controller.dispose);
+    await controller.initialize();
+    expect(await controller.deleteAccount(), isFalse);
+    expect(gateway.deleteAccountCalls, 0);
   });
 }

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>öv AI · Privacy Policy</title>
+  <style>
+    :root { color-scheme: light dark; --ink: #1d2a22; --muted: #5c6b61; --line: #d9d4c7; --bg: #faf7f0; --accent: #1f4d36; }
+    @media (prefers-color-scheme: dark) { :root { --ink: #ece6d8; --muted: #b3ab98; --line: #3a463f; --bg: #0f2a1e; --accent: #d8b45a; } }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+    h1 { font-size: 30px; line-height: 1.2; margin: 0 0 8px; }
+    h2 { font-size: 20px; margin: 36px 0 8px; color: var(--accent); }
+    h3 { font-size: 16px; margin: 20px 0 4px; }
+    p, li { color: var(--ink); }
+    .meta { color: var(--muted); margin: 0 0 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+    a { color: var(--accent); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 56px 0; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>öv AI — Privacy Policy</h1>
+  <p class="meta">Effective date: October 18, 2026 · Developer: Gereture LLC, Ulaanbaatar, Mongolia · Contact: <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a> · <a href="#mn">Монгол хэлээр</a></p>
+
+  <p>This policy explains how Gereture LLC ("we", "us") handles information when you use the öv AI app on iOS, Android or the web ("the App").</p>
+
+  <h2>1. Summary</h2>
+  <ul>
+    <li>You can use öv AI as a guest, without an account.</li>
+    <li>If you sign in with Google or Apple, we receive your name, email address and an account ID through Firebase Authentication.</li>
+    <li>When you are signed in, the stories you save and your reading and listening progress are stored with your account, so they are there when you return.</li>
+    <li>Your photos and your location stay on your device.</li>
+    <li>You can delete your account and its data at any time inside the App.</li>
+    <li>We do not sell your data, show ads, or track you across other apps or websites.</li>
+  </ul>
+
+  <h2>2. Information we collect</h2>
+  <h3>2.1 Account information (only if you sign in)</h3>
+  <p>When you choose "Continue with Google" or "Continue with Apple", we receive through Google Firebase Authentication: your name, your email address (a relay address if you use Apple's "Hide My Email"), your profile photo URL (Google only, if available) and a unique account ID.</p>
+  <h3>2.2 Stories and progress saved to your account</h3>
+  <p>While you are signed in, we store in Google Cloud Firestore: your display name, the stories you add to your library and the choices that shaped them, bookmarks, reading progress, listening position and completed chapters. These records are linked to your account ID and can be read only by your account.</p>
+  <h3>2.3 Information kept only on your device</h3>
+  <p>Reading settings (theme, text size, playback speed), story drafts, saved places, downloaded story packs and any cover photo you choose stay on your device and are not uploaded. As a guest, your stories and progress also stay only on your device.</p>
+  <h3>2.4 Location</h3>
+  <p>If you open the map and allow location access, the App uses your location only while it is open, to show nearby places and your distance from them. Your location is processed on your device. We do not store it, upload it or use it in the background. You can turn off location access at any time in your device settings.</p>
+  <h3>2.5 Camera and photo library</h3>
+  <p>If you allow access, you can take or choose a photo for a story cover. The photo stays on your device and is not uploaded or analysed.</p>
+  <h3>2.6 App integrity</h3>
+  <p>To protect our servers from abuse, the App uses Firebase App Check. It asks Apple (App Attest / DeviceCheck), Google Play Integrity or Google reCAPTCHA to confirm that requests come from a genuine copy of the App. This does not include your stories or contact details.</p>
+
+  <h2>3. Service providers</h2>
+  <table>
+    <tr><th>Service</th><th>Purpose</th><th>Data</th></tr>
+    <tr><td>Firebase Authentication, Google Sign-In, Sign in with Apple</td><td>Sign-in</td><td>Name, email, account ID, sign-in metadata such as IP address and device type</td></tr>
+    <tr><td>Cloud Firestore, Cloud Functions, Cloud Storage (Google Cloud)</td><td>Saving your library and progress; serving stories and narration</td><td>The account data in section 2.2</td></tr>
+    <tr><td>Firebase App Check</td><td>Abuse protection</td><td>Device integrity tokens</td></tr>
+    <tr><td>Firebase Hosting</td><td>Serving the web app</td><td>Standard web request data such as IP address</td></tr>
+    <tr><td>Google Maps or OpenStreetMap</td><td>Showing the map</td><td>Map tile requests, including your IP address and the area being viewed</td></tr>
+  </table>
+  <p>Privacy policies: <a href="https://policies.google.com/privacy">Google</a> · <a href="https://www.apple.com/legal/privacy/">Apple</a> · <a href="https://osmfoundation.org/wiki/Privacy_Policy">OpenStreetMap Foundation</a>. We do not use advertising or analytics SDKs.</p>
+
+  <h2>4. How we use information</h2>
+  <p>We use your information only to sign you in, keep your library and progress with your account, protect the service from abuse, and respond to your requests. We do not use it for advertising or profiling, and we do not sell or rent it.</p>
+
+  <h2>5. Keeping and deleting your data</h2>
+  <ul>
+    <li><strong>Delete your account in the App:</strong> open <em>Profile → Account → Delete account</em> and confirm by signing in once more. This immediately and permanently deletes your account, your saved stories and your reading progress. If you signed in with Apple, the App also revokes its access to your Apple ID.</li>
+    <li><strong>On-device data</strong> stays until you reset it in <em>Settings</em>, delete your account or uninstall the App.</li>
+    <li><strong>Account data</strong> is kept while your account exists.</li>
+    <li>You can also ask us to delete your data by emailing <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a> from the address linked to your account. We will do so within 30 days.</li>
+  </ul>
+
+  <h2>6. Security</h2>
+  <p>All connections use HTTPS. Your account data can be read only by your signed-in account, and changes go through our authenticated server functions. No method of storage or transmission is completely secure, but we rely on widely used Google Cloud and Firebase protections.</p>
+
+  <h2>7. Children</h2>
+  <p>öv AI is suitable for general audiences but is not directed at children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has given us personal information, contact us and we will delete it.</p>
+
+  <h2>8. Your rights</h2>
+  <p>Depending on where you live, including under Mongolia's Law on the Protection of Personal Information, you may have the right to access, correct or delete your personal information, or to withdraw consent. Contact us at <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a>.</p>
+
+  <h2>9. International transfers</h2>
+  <p>Google Cloud and Firebase may process data on servers outside Mongolia, including in Japan and the United States, under their own privacy commitments.</p>
+
+  <h2>10. Changes</h2>
+  <p>If we change this policy, we will update the effective date above. Before any significant change, such as AI features that send your content to our servers, we will update this policy and tell you in the App.</p>
+
+  <h2>11. Contact</h2>
+  <p>Gereture LLC, Ulaanbaatar, Mongolia · <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a></p>
+
+  <hr>
+
+  <section id="mn" lang="mn">
+  <h1>öv AI — Нууцлалын бодлого</h1>
+  <p class="meta">Хүчин төгөлдөр болсон: 2026 оны 10-р сарын 18 · Хөгжүүлэгч: Gereture LLC, Улаанбаатар, Монгол Улс · Холбоо барих: <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a></p>
+
+  <h2>1. Товчоор</h2>
+  <ul>
+    <li>Öv AI-г бүртгэлгүйгээр зочноор ашиглаж болно.</li>
+    <li>Google эсвэл Apple-ээр нэвтэрвэл таны нэр, имэйл, бүртгэлийн дугаарыг Firebase Authentication-ээр дамжуулан хүлээн авна.</li>
+    <li>Нэвтэрсэн үед таны хадгалсан түүх, уншсан болон сонссон явц таны бүртгэлтэй хамт хадгалагдана.</li>
+    <li>Таны зураг болон байршил төхөөрөмжөөс гарахгүй.</li>
+    <li>Та аппын дотроос бүртгэл болон түүнтэй холбоотой мэдээллээ хүссэн үедээ устгаж болно.</li>
+    <li>Бид таны мэдээллийг худалдахгүй, зар харуулахгүй, бусад апп болон вэбсайт дээр таныг мөрдөхгүй.</li>
+  </ul>
+
+  <h2>2. Цуглуулах мэдээлэл</h2>
+  <p><strong>Бүртгэлийн мэдээлэл (нэвтэрсэн үед):</strong> нэр, имэйл (Apple-ийн "Hide My Email" ашигласан бол дамжуулах хаяг), профайл зургийн холбоос (зөвхөн Google), бүртгэлийн давтагдашгүй дугаар.</p>
+  <p><strong>Бүртгэлд хадгалагдах мэдээлэл:</strong> нэвтэрсэн үед таны нэр, номын санд нэмсэн түүх ба сонголтууд, хадгалсан хуудас, уншсан явц, сонссон байрлал, дуусгасан бүлгүүдийг Google Cloud Firestore-д хадгална. Эдгээрийг зөвхөн таны бүртгэл үзэж чадна.</p>
+  <p><strong>Зөвхөн төхөөрөмж дээр:</strong> уншлагын тохиргоо, ноорог, хадгалсан газрууд, татсан багцууд, нүүр зураг. Зочноор ашиглах үед түүх болон явц ч мөн төхөөрөмж дээрээ л үлдэнэ.</p>
+  <p><strong>Байршил:</strong> газрын зураг нээж зөвшөөрөл өгсөн үед л, апп нээлттэй байх хугацаанд ойролцоох газруудыг харуулахад ашиглана. Хадгалахгүй, серверт илгээхгүй, арын горимд ашиглахгүй.</p>
+  <p><strong>Камер ба зургийн сан:</strong> түүхийн нүүр зураг сонгоход ашиглана. Зураг төхөөрөмж дээр үлдэнэ.</p>
+  <p><strong>Аппын бүрэн бүтэн байдал:</strong> серверийг хамгаалахын тулд Firebase App Check нь хүсэлт жинхэнэ аппаас ирж буйг Apple, Google Play Integrity эсвэл reCAPTCHA-аар баталгаажуулна. Үүнд таны түүх, холбоо барих мэдээлэл орохгүй.</p>
+
+  <h2>3. Мэдээлэл устгах</h2>
+  <p>Аппын <em>Profile → Account → Delete account</em> хэсэгт ороод дахин нэг нэвтэрч баталгаажуулбал таны бүртгэл, хадгалсан түүх, уншсан явц шууд бөгөөд бүрмөсөн устна. Apple-ээр нэвтэрсэн бол апп таны Apple ID-д олгосон эрхээ цуцална. Мөн <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a> хаягаар хүсэлт илгээвэл 30 хоногийн дотор устгана.</p>
+
+  <h2>4. Хүүхэд</h2>
+  <p>Öv AI нь бүх насныханд тохиромжтой боловч 13-аас доош насны хүүхдэд чиглээгүй. Бид тэдний хувийн мэдээллийг санаатайгаар цуглуулдаггүй.</p>
+
+  <h2>5. Таны эрх</h2>
+  <p>Монгол Улсын Хүний хувийн мэдээлэл хамгаалах тухай хуулийн дагуу та мэдээллээ үзэх, засах, устгуулах, зөвшөөрлөө цуцлах эрхтэй. Хүсэлтээ <a href="mailto:enkhjin@geret.mn">enkhjin@geret.mn</a> хаягаар илгээнэ үү.</p>
+
+  <h2>6. Олон улсад шилжүүлэх</h2>
+  <p>Google Cloud болон Firebase нь мэдээллийг Монгол Улсаас гадна, тухайлбал Япон, АНУ-д байрлах серверт боловсруулж болно.</p>
+
+  <h2>7. Өөрчлөлт</h2>
+  <p>Бодлогыг өөрчилбөл дээрх огноог шинэчилнэ. Таны агуулгыг серверт илгээх AI функц зэрэг томоохон өөрчлөлтийн өмнө аппаар дамжуулан мэдэгдэнэ.</p>
+  </section>
+</main>
+</body>
+</html>

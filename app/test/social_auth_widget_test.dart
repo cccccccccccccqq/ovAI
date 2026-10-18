@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +35,7 @@ class _WidgetAuthGateway implements AuthGateway {
   Future<AppIdentity> Function(SocialProvider)? onSignIn;
   Future<void> Function()? onSignOut;
   int signInCalls = 0;
+  int deleteAccountCalls = 0;
 
   @override
   AppIdentity? get currentIdentity => _identity;
@@ -58,6 +60,13 @@ class _WidgetAuthGateway implements AuthGateway {
   @override
   Future<void> signOut() async {
     await onSignOut?.call();
+    _identity = null;
+    _changes.add(null);
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    deleteAccountCalls++;
     _identity = null;
     _changes.add(null);
   }
@@ -268,6 +277,49 @@ void main() {
       await _tap(tester, 'Profile');
       expect(find.text('Saran'), findsWidgets);
       expect(find.text('account-a@example.test'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('iOS builds always offer Apple next to Google', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    await _mount(tester, _WidgetAuthGateway(isEmulator: false));
+    await _tap(tester, 'Begin your journey');
+    expect(
+      tester.widget<OutlinedButton>(_provider('Continue with Apple')).onPressed,
+      isNotNull,
+    );
+    expect(find.text('Apple sign-in is coming soon.'), findsNothing);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets(
+    'deleting the account confirms, signs out and clears the device',
+    (tester) async {
+      final gateway = _WidgetAuthGateway();
+      await _mount(tester, gateway);
+      await _tap(tester, 'Begin your journey');
+      await _tap(tester, 'Continue with Google');
+      await _state(tester).createChronicle(templateId: 'silver-tree');
+      await _tap(tester, 'Profile');
+      await _tap(tester, 'Account');
+      expect(find.byType(SignInScreen), findsOneWidget);
+
+      await _tap(tester, 'Delete account');
+      expect(find.text('Delete your account?'), findsOneWidget);
+      await _tap(tester, 'Keep my account');
+      expect(gateway.deleteAccountCalls, 0);
+
+      await _tap(tester, 'Delete account');
+      await tester.tap(find.widgetWithText(FilledButton, 'Delete account'));
+      await tester.pumpAndSettle();
+      expect(gateway.deleteAccountCalls, 1);
+      expect(find.byType(WelcomeScreen), findsOneWidget);
+
+      await _tap(tester, 'Begin your journey');
+      await _tap(tester, 'Continue with Google');
+      expect(_state(tester).library, isEmpty);
       expect(tester.takeException(), isNull);
     },
   );

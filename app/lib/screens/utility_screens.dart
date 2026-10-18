@@ -7,6 +7,7 @@ import '../core/app_scope.dart';
 import '../core/app_state.dart';
 import '../core/audio_controller.dart';
 import '../core/download_controller.dart';
+import '../core/legal.dart';
 import '../core/models.dart';
 import '../core/theme.dart';
 import '../history/chapter_map.dart';
@@ -613,20 +614,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(cloud ? 'Reset this device?' : 'Reset this demo?'),
+        title: Text(cloud ? 'Reset this device?' : 'Reset this device?'),
         content: Text(
           cloud
               ? 'Clear downloaded packs, drafts, saved places and reading settings from this device. Stories and progress saved to your account will remain.'
-              : 'This removes saved stories, profile, queued drafts, installed demo pack files and settings from this device.',
+              : 'This removes saved stories, profile, queued drafts, downloaded pack files and settings from this device.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(cloud ? 'Keep my settings' : 'Keep my demo'),
+            child: Text(cloud ? 'Keep my settings' : 'Keep my data'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(cloud ? 'Reset device' : 'Reset demo'),
+            child: Text(cloud ? 'Reset device' : 'Reset'),
           ),
         ],
       ),
@@ -705,7 +706,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           app.profileName ??
                               (app.isGuest
                                   ? 'Guest traveller'
-                                  : 'Your local demo'),
+                                  : 'Your local profile'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
@@ -808,16 +809,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.download_outlined),
-            title: const Text('Installed demo packs'),
+            title: const Text('Downloaded packs'),
             subtitle: Text('${app.installedPacks.length} on this device'),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => context.push('/downloads'),
           ),
           SwitchListTile.adaptive(
             contentPadding: EdgeInsets.zero,
-            title: Text(
-              app.usesCloudBackend ? 'Offline mode' : 'Demo offline mode',
-            ),
+            title: Text('Offline mode'),
             subtitle: Text(
               app.usesCloudBackend
                   ? 'Read saved stories and keep new drafts on this device until you are online.'
@@ -837,18 +836,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () => context.push('/offline'),
           ),
           const SizedBox(height: 28),
-          const SectionHeading(title: 'About this prototype'),
+          const SectionHeading(title: 'About öv AI'),
           Text(
             app.usesCloudBackend
                 ? 'öv AI · v0.1\nPrepared stories and recorded narration. Stories and reading progress are saved to your account. Reading settings, drafts, saved places and downloads stay on this device.'
                 : 'öv AI · v0.1\nPrepared editorial stories and system narration. Profiles, stories and progress are stored locally. AI generation and account sync are planned for a later version.',
             style: TextStyle(fontSize: 12),
           ),
-          const SizedBox(height: 26),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text('Privacy Policy'),
+            trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+            onTap: () => openPrivacyPolicy(context),
+          ),
+          const SizedBox(height: 18),
           PillButton(
             label: app.usesCloudBackend
                 ? 'Reset device settings'
-                : 'Reset local demo',
+                : 'Reset this device',
             icon: Icons.restart_alt_rounded,
             secondary: true,
             busy: _resetting,
@@ -911,10 +917,10 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const DemoBadge(text: 'BUNDLED DEMO PACKS'),
+          const DemoBadge(text: 'BUNDLED STORY PACKS'),
           const SizedBox(height: 18),
           const Text(
-            'Install a cover, prepared story and Samantha narration into local storage. These packs are bundled with the prototype; they do not include map tiles.',
+            'Install a cover, prepared story and Samantha narration into local storage. These packs are bundled with the app; they do not include map tiles.',
           ),
           const SizedBox(height: 20),
           Card(
@@ -1023,7 +1029,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                           ),
                         ] else
                           PillButton(
-                            label: 'Install demo pack',
+                            label: 'Install pack',
                             icon: Icons.download_rounded,
                             secondary: true,
                             onPressed: () => _attempt(
@@ -1115,7 +1121,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
           DemoBadge(
             text: app.usesCloudBackend
                 ? 'DRAFTS ON THIS DEVICE'
-                : 'EXPLICIT LOCAL DEMO QUEUE',
+                : 'QUEUED ON THIS DEVICE',
           ),
           const SizedBox(height: 20),
           Card(
@@ -1133,8 +1139,8 @@ class _OfflineScreenState extends State<OfflineScreen> {
                           ? 'Offline mode is on'
                           : 'Offline mode is off'
                     : app.offline
-                    ? 'Demo offline mode is on'
-                    : 'Demo offline mode is off',
+                    ? 'Offline mode is on'
+                    : 'Offline mode is off',
               ),
               subtitle: Text(
                 app.usesCloudBackend
@@ -1149,7 +1155,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
           ),
           const SizedBox(height: 22),
           const Text(
-            'Queue your selection now, then explicitly resume it when you are ready. The prototype does not create stories in the background or send notifications.',
+            'Queue your selection now, then explicitly resume it when you are ready. öv AI does not create stories in the background or send notifications.',
           ),
           const SizedBox(height: 18),
           PillButton(
@@ -1252,7 +1258,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
           const SectionHeading(
             title: 'Read while you wait',
             subtitle:
-                'Prepared library stories and installed demo packs work without the generation service.',
+                'Prepared library stories and downloaded packs work without a connection.',
           ),
           PillButton(
             label: 'Open my saved scrolls',
@@ -1262,7 +1268,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
           ),
           const SizedBox(height: 10),
           PillButton(
-            label: 'Manage demo packs',
+            label: 'Manage downloads',
             icon: Icons.download_outlined,
             secondary: true,
             onPressed: () => context.push('/downloads'),

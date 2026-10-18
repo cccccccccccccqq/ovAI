@@ -636,7 +636,7 @@ class ProfileScreen extends StatelessWidget {
                             : 'CONNECTED ACCOUNT'
                       : state.usesCloudBackend
                       ? 'EXPLORING AS A GUEST'
-                      : 'ON THIS DEVICE · LOCAL PROTOTYPE',
+                      : 'ON THIS DEVICE',
                 ),
                 const SizedBox(height: 15),
                 Text(
@@ -677,7 +677,7 @@ class ProfileScreen extends StatelessWidget {
                             ? 'Sign in'
                             : 'Account'
                       : state.isGuest
-                      ? 'Create a demo profile'
+                      ? 'Create a profile'
                       : 'Edit traveller name',
                   subtitle: auth != null && state.isGuest
                       ? 'Continue with Google or Apple'
@@ -795,7 +795,7 @@ class ProfileScreen extends StatelessWidget {
                 ? auth?.isSignedIn == true
                       ? 'öv AI · v0.1\nStories and reading progress are saved to your account. Reading settings and downloads stay on this device.'
                       : 'öv AI · v0.1\nSign in to save stories and reading progress to your account.'
-                : 'öv AI · Prototype v0.1\nYour stories and preferences are stored on this device.',
+                : 'öv AI · v0.1\nYour stories and preferences are stored on this device.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall,
           ),
