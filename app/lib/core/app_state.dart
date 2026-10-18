@@ -448,7 +448,10 @@ class AppState extends ChangeNotifier {
       );
     }
     final selectedVoice = parent?.voiceId ?? _draft.voiceId;
-    if (template.isHistorical || usesCloudBackend) {
+    // Bundled Orkhon stories open locally for anyone without a cloud account,
+    // so guests can read them; signed-in readers still save to the cloud.
+    final cloudAccount = _historyStore?.uid.isNotEmpty == true && !_offline;
+    if (template.isHistorical || (usesCloudBackend && cloudAccount)) {
       final store = _historyStore;
       if (store == null || _offline) {
         throw StateError(
