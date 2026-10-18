@@ -97,9 +97,15 @@ class CloudFirebase {
     await check.setTokenAutoRefreshEnabled(true);
   }
 
-  /// Server-side enforcement is unchanged. A missing or unregistered provider
-  /// fails before a mutation rather than silently using an emulator fallback.
+  /// A web build without a site key skips attestation; the callables then rely
+  /// on Firebase Authentication alone until ENFORCE_APP_CHECK is turned on.
+  /// Otherwise a missing or unregistered provider fails before a mutation.
   static Future<void> requireAppCheck(FirebaseApp app) async {
+    if (kIsWeb &&
+        !const bool.fromEnvironment('APP_CHECK_DEBUG') &&
+        const String.fromEnvironment('APP_CHECK_WEB_SITE_KEY').isEmpty) {
+      return;
+    }
     await configureAppCheck(app);
     final token = await FirebaseAppCheck.instanceFor(app: app).getToken();
     if (token == null || token.isEmpty) {

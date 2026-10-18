@@ -14,9 +14,9 @@ if (getApps().length === 0) initializeApp();
 const database = getFirestore();
 setGlobalOptions({ region: "asia-northeast1", maxInstances: 10 });
 
-// Only the emulator relaxes App Check. Cloud deployments require an attested
-// app as well as Firebase Authentication on every callable.
-const callableOptions = { enforceAppCheck: process.env.FUNCTIONS_EMULATOR !== "true" };
+// Every callable requires Firebase Authentication. App Check is enforced only
+// when ENFORCE_APP_CHECK=true, because the web app has no reCAPTCHA site key yet.
+const callableOptions = { enforceAppCheck: process.env.ENFORCE_APP_CHECK === "true" };
 
 async function authenticated<T>(
   request: CallableRequest<unknown>,
