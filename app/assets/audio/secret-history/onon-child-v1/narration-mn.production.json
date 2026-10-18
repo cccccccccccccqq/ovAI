@@ -1,0 +1,53 @@
+{
+  "chapterId": "onon-child",
+  "voice": "mn-MN-YesuiNeural",
+  "contentVersion": 1,
+  "narrationSha256": "325a1216c80a367f62a43554839182a461a54ce4b50c332ce2dd369a273322fd",
+  "scenes": [
+    {
+      "id": "onon-intro",
+      "startMs": 0,
+      "endMs": 25000,
+      "originalSeconds": 20.76,
+      "tempo": 0.8364222401289283
+    },
+    {
+      "id": "birthplace",
+      "startMs": 25000,
+      "endMs": 96000,
+      "originalSeconds": 57.36,
+      "tempo": 0.809940694719006
+    },
+    {
+      "id": "family",
+      "startMs": 96000,
+      "endMs": 117000,
+      "originalSeconds": 17.52,
+      "tempo": 0.8414985590778098
+    },
+    {
+      "id": "journey",
+      "startMs": 117000,
+      "endMs": 178000,
+      "originalSeconds": 50.352,
+      "tempo": 0.8278855639592239
+    },
+    {
+      "id": "borte",
+      "startMs": 178000,
+      "endMs": 218000,
+      "originalSeconds": 33.36,
+      "tempo": 0.837769964841788
+    },
+    {
+      "id": "ending",
+      "startMs": 218000,
+      "endMs": 240000,
+      "originalSeconds": 19.128,
+      "tempo": 0.8766269477543538
+    }
+  ],
+  "measuredSeconds": 240.0,
+  "audioSha256": "cf436591ba242766800419aec75ed19f4f5b06492f3eaab0723b3a8b13450caa",
+  "bytes": 2880909
+}
