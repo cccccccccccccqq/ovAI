@@ -75,7 +75,7 @@ flutter run -d YOUR_ANDROID_DEVICE \
 
 ## Apple тохируулах
 
-Бодит Sign in with Apple тохируулахад Apple Developer Program account шаардлагатай. Хэрэглэгч одоогоор ийм account-гүй тул бодит Apple нэвтрэлтийг идэвхжүүлээгүй. Xcode project-д байгаа team `4CS2X8UTJX`-г хадгалсан; энэ ID дангаараа идэвхтэй membership эсвэл capability баталж байгаа хэрэг биш. Membership худалдаж авах эсвэл billing өөрчлөх үйлдэл хийгээгүй.
+Бодит Sign in with Apple тохируулахад Apple Developer Program account шаардлагатай. Апп IO Technology LLC-ийн team `W94G6F573L`-ээр sign хийгдэж, 2026-10-19-нд анхны TestFlight build (1.0.0 (1)) upload хийгдсэн.
 
 1. [Apple Developer → Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list) дээр `mn.ov.ovChronicles` App ID-д Sign in with Apple-ийг идэвхжүүлнэ.
 2. `Runner/Runner.entitlements` файлд Apple capability-ийн загвар бэлдсэн; **одоогийн build-д холбоогүй, capability идэвхгүй**. Ингэснээр Google login болон одоогийн signing тохиргоо Apple capability-тай provisioning profile шаардахгүй. Developer account бэлэн болсон үед Xcode → Runner → Signing & Capabilities → `+ Capability` → Sign in with Apple-ийг нэмнэ. Runner-ийн Debug/Release/Profile configuration-ийн `CODE_SIGN_ENTITLEMENTS` нь `Runner/Runner.entitlements` руу зааж байгааг шалгаж, төхөөрөмжийн provisioning profile-оо шинэчилнэ.

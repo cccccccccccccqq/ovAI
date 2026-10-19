@@ -28,7 +28,7 @@ iOS build-ийг GitHub Actions-ийн macOS runner хийнэ (`.github/workflo
    - https://ov-ai-5ae61.web.app/privacy.html нээгдэх ёстой
    - `npx firebase-tools functions:list --project ov-ai-5ae61` жагсаалтад `deleteAccount` байх ёстой
 
-## B. Apple тал (Амраа, Team `4CS2X8UTJX`)
+## B. Apple тал (Амраа, Team `W94G6F573L` — IO Technology LLC)
 
 1. **App ID:** [developer.apple.com](https://developer.apple.com/account/resources/identifiers/list) → Identifiers → `mn.ov.ovChronicles` (байхгүй бол **+** дарж App ID үүсгэнэ). Capabilities хэсэгт дараах хоёрыг асаана:
    - ☑ **Sign in with Apple**
@@ -56,11 +56,11 @@ iOS build-ийг GitHub Actions-ийн macOS runner хийнэ (`.github/workflo
 
 ## C. Firebase Console (Энхжин, `ov-ai-5ae61`)
 
-1. **Team ID:** Project settings → Your apps → **Ov AI iOS** → Team ID = `4CS2X8UTJX`.
+1. **Team ID:** Project settings → Your apps → **Ov AI iOS** → Team ID = `W94G6F573L`.
 2. **App Check:** App Check → Apps → Ov AI iOS → **App Attest** → Register.
    > Backend-ийн callable-ууд App Check шаарддаг. Энэ алхмыг алгасвал TestFlight build дээр нэвтэрсний дараах түүх хадгалах, явц, account устгах функцүүд ажиллахгүй.
 3. **Apple нэвтрэлт:** Authentication → Sign-in method → **Apple** → Enable.
-   - OAuth code flow хэсэгт Team ID `4CS2X8UTJX`, B-6-ийн Key ID болон private key-г оруулна. Апп account устгах үед Apple токеныг revoke хийхэд энэ хэрэгтэй.
+   - OAuth code flow хэсэгт Team ID `W94G6F573L`, B-6-ийн Key ID болон private key-г оруулна. Апп account устгах үед Apple токеныг revoke хийхэд энэ хэрэгтэй.
    - Services ID зөвхөн web/Android-д хэрэгтэй тул одоогоор хоосон үлдээж болно.
 4. **Google нэвтрэлт:** аль хэдийн идэвхтэй. iOS client `765364993612-buhd7…` нь `Info.plist`-тэй таарч байгаа.
 

@@ -16,7 +16,7 @@ concurrency:
 
 env:
   FLUTTER_VERSION: "3.41.7"
-  TEAM_ID: 4CS2X8UTJX
+  TEAM_ID: W94G6F573L
 
 jobs:
   testflight:

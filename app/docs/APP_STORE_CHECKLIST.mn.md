@@ -1,6 +1,6 @@
 # App Store-д гаргах checklist — öv AI (iOS)
 
-2026-10-18-нд шинэчилсэн. Bundle ID: `mn.ov.ovChronicles`, Team ID: `4CS2X8UTJX`, version `1.0.0+1`, Firebase project `ov-ai-5ae61`.
+2026-10-18-нд шинэчилсэн. Bundle ID: `mn.ov.ovChronicles`, Team ID: `W94G6F573L`, version `1.0.0+1`, Firebase project `ov-ai-5ae61`.
 
 Тэмдэглэгээ: 🔴 заавал · 🟡 эрсдэлтэй · ✅ кодонд хийгдсэн · 👤 console/портал дээр хүн хийх
 
@@ -8,9 +8,9 @@
 
 ## 1. Apple account ба App Store Connect
 
-- [ ] 👤🔴 **Apple Developer Program** membership ($99/жил)
-- [ ] 👤🔴 App Store Connect дээр app үүсгэх (Bundle ID `mn.ov.ovChronicles`)
-- [ ] 👤🔴 Xcode Team-ийг идэвхтэй membership-тэй account болгох (`4CS2X8UTJX`)
+- [x] ✅ **Apple Developer Program** membership — IO Technology LLC
+- [x] ✅ App Store Connect дээр app үүссэн (Bundle ID `mn.ov.ovChronicles`)
+- [x] ✅ Xcode Team `W94G6F573L`; 2026-10-19-нд 1.0.0 (1) TestFlight руу upload хийгдсэн
 - [ ] 👤 Agreements, Tax, Banking (үнэгүй апп бол Free Apps agreement хангалттай)
 
 ## 2. Sign in with Apple (Guideline 4.8)
