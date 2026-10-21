@@ -1,17 +1,17 @@
 # Öv — stories of the steppe
 
-> Current cloud target: **ov-ai-5ae61**. See [migration status](../CLOUD_MIGRATION_STATUS.mn.md) and [cloud connection setup](docs/CLOUD_CONNECTION.md). Explicit local runs require both `BACKEND_MODE=emulator` and `AUTH_MODE=emulator`.
+> Current cloud target: **ov-ai-5ae61**. See [migration status](../docs/CLOUD_MIGRATION_STATUS.mn.md) and [cloud connection setup](../docs/CLOUD_CONNECTION.md). Explicit local runs require both `BACKEND_MODE=emulator` and `AUTH_MODE=emulator`.
 
 
 A Flutter prototype of the supplied **Working app · iPhone** design. All 19 screens have working local interactions. Google sign-in now uses Firebase Auth; Apple sign-in is prepared but disabled pending developer/provider setup. Prepared stories, reading progress and recorded narration remain on device, with separate storage for each account.
 
 The Firebase emulator backend and FlutterFire adapter are available separately.
-See [backend setup](../BACKEND_FIREBASE.mn.md) and
-[client guide](docs/FIREBASE_CLIENT.md). Run
+See [backend setup](../docs/BACKEND_FIREBASE.mn.md) and
+[client guide](../docs/FIREBASE_CLIENT.md). Run
 `flutter run -d chrome -t lib/main_firebase_check.dart` after starting/seeding the
 emulators to verify the real SDK flow. The default app uses live Auth; run
 `flutter run -d chrome --dart-define=AUTH_MODE=emulator` for simulated Google/Apple
-accounts. See [social sign-in setup](docs/SOCIAL_AUTH_SETUP.md). Story library
+accounts. See [social sign-in setup](../docs/SOCIAL_AUTH_SETUP.md). Story library
 sync with Firestore remains separate work.
 
 ## Run
@@ -23,7 +23,7 @@ flutter pub get
 flutter run -d chrome
 ```
 
-For an iPhone simulator, start a simulator and run `flutter run`. Android project files are included; install the Android SDK and select a device before building Android. The OSM map needs no API key. For Google Maps, see [Maps setup](docs/MAPS_SETUP.md), run the local configuration helper, and supply the appropriate platform define file.
+For an iPhone simulator, start a simulator and run `flutter run`. Android project files are included; install the Android SDK and select a device before building Android. The OSM map needs no API key. For Google Maps, see [Maps setup](../docs/MAPS_SETUP.md), run the local configuration helper, and supply the appropriate platform define file.
 
 ## What works
 

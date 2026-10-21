@@ -18,7 +18,7 @@
 - Emulator seed: 4 газар, 11 demo template, 44 бүтэн audio + 4 зураг. Бүх story `prepared-demo`; verified fact эсвэл шинээр AI үүсгэсэн гэж тэмдэглэхгүй.
 - FlutterFire client adapter, typed snapshot models, realtime profile/library/story streams, callable wrappers, authenticated Storage reference.
 
-19 дэлгэцийн үндсэн апп одоо Firebase Auth-тай холбогдсон: Google social sign-in, session restore/sign-out, UID бүрийн local library тусгаарлалт ажиллана. Apple-ийн код бэлэн боловч Developer/provider тохиргоо хүлээж live товч идэвхгүй. Default `AUTH_MODE=live`; `AUTH_MODE=emulator` нь fake social account ашиглана. Story/library болон player нь prepared local өгөгдлөө ашигласан хэвээр; Firestore sync, versioned content migration, private audio cache/player adapter дараагийн ажил. Бодит AI/TTS, бүртгэлтэй хоёр provider account-ыг холбох/merge хийх UI, account бүрэн устгах, фото upload, public share API ороогүй. [Social auth тохиргоо](app/docs/SOCIAL_AUTH_SETUP.md).
+19 дэлгэцийн үндсэн апп одоо Firebase Auth-тай холбогдсон: Google social sign-in, session restore/sign-out, UID бүрийн local library тусгаарлалт ажиллана. Apple-ийн код бэлэн боловч Developer/provider тохиргоо хүлээж live товч идэвхгүй. Default `AUTH_MODE=live`; `AUTH_MODE=emulator` нь fake social account ашиглана. Story/library болон player нь prepared local өгөгдлөө ашигласан хэвээр; Firestore sync, versioned content migration, private audio cache/player adapter дараагийн ажил. Бодит AI/TTS, бүртгэлтэй хоёр provider account-ыг холбох/merge хийх UI, account бүрэн устгах, фото upload, public share API ороогүй. [Social auth тохиргоо](SOCIAL_AUTH_SETUP.md).
 
 ## Cloud project ба local project
 
@@ -130,4 +130,4 @@ Request бүрийн UID-г Auth token-оос авна. Клиент uid, role, 
 - Runtime npm dependency audit: `npm audit --omit=dev` — 0 vulnerability.
 - Firebase plugin-уудын шаардлагаар iOS minimum 15.0 болсон. Firebase Apple SDK 12.19.0 / 42 pod-тай `flutter build ios --simulator --debug` амжилттай; `app/build/ios/iphonesimulator/Runner.app` гарсан. Android SDK энэ host дээр байхгүй тул Android release build шалгаагүй.
 
-Flutter ашиглах жишээ ба App Check тохиргоо: [client guide](app/docs/FIREBASE_CLIENT.md). Серверийн input/response дэлгэрэнгүй: [functions guide](functions/README.md).
+Flutter ашиглах жишээ ба App Check тохиргоо: [client guide](FIREBASE_CLIENT.md). Серверийн input/response дэлгэрэнгүй: [functions guide](../functions/README.md).

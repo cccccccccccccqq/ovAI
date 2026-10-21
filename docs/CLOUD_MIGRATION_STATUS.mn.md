@@ -28,7 +28,7 @@ Target: `ov-ai-5ae61` (project number `765364993612`).
 - Emulator-ийн хиймэл хэрэглэгч, хуучин private library/progress-ийг cloud account-д хамааруулж хуулахгүй. Хуучин local хадгалалт тусдаа хэвээр.
 
 Шилжүүлэх алхам: [CLOUD_CATALOG_MIGRATION.mn.md](CLOUD_CATALOG_MIGRATION.mn.md).
-Client тохиргоо: [CLOUD_CONNECTION.md](app/docs/CLOUD_CONNECTION.md).
+Client тохиргоо: [CLOUD_CONNECTION.md](CLOUD_CONNECTION.md).
 
 ## Explicit local mode
 

@@ -1,7 +1,7 @@
 # Builds the iOS app on a GitHub macOS runner and uploads it to TestFlight.
 # No local Mac or certificate files are needed: Xcode creates the signing
 # certificate and profile through an App Store Connect API key (Admin role).
-# Setup: app/docs/TESTFLIGHT_SETUP.mn.md
+# Setup: docs/TESTFLIGHT_SETUP.mn.md
 # Run: Actions → "iOS TestFlight" → Run workflow, or push a tag such as ios-v1.0.0-1.
 name: iOS TestFlight
 
@@ -37,7 +37,7 @@ jobs:
           [ -n "$ASC_ISSUER_ID" ] || missing="$missing APP_STORE_CONNECT_ISSUER_ID"
           [ -n "$ASC_KEY_P8" ] || missing="$missing APP_STORE_CONNECT_KEY_P8"
           if [ -n "$missing" ]; then
-            echo "::error::Missing repository secrets:$missing (see app/docs/TESTFLIGHT_SETUP.mn.md)"
+            echo "::error::Missing repository secrets:$missing (see docs/TESTFLIGHT_SETUP.mn.md)"
             exit 1
           fi
 
