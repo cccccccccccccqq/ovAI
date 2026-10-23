@@ -30,15 +30,18 @@ jobs:
       ASC_KEY_P8: ${{ secrets.APP_STORE_CONNECT_KEY_P8 }}
       MAPS_IOS_KEY: ${{ secrets.GOOGLE_MAPS_IOS_KEY }}
     steps:
+      # Without the signing secrets the job still tests and builds the app
+      # (unsigned) so the iOS build is verified, then fails before signing.
       - name: Check required secrets
+        id: secrets
         run: |
           missing=""
           [ -n "$ASC_KEY_ID" ] || missing="$missing APP_STORE_CONNECT_KEY_ID"
           [ -n "$ASC_ISSUER_ID" ] || missing="$missing APP_STORE_CONNECT_ISSUER_ID"
           [ -n "$ASC_KEY_P8" ] || missing="$missing APP_STORE_CONNECT_KEY_P8"
+          echo "missing=$missing" >> "$GITHUB_OUTPUT"
           if [ -n "$missing" ]; then
-            echo "::error::Missing repository secrets:$missing (see docs/TESTFLIGHT_SETUP.mn.md)"
-            exit 1
+            echo "::warning::Missing repository secrets:$missing (see docs/TESTFLIGHT_SETUP.mn.md). Building unsigned only."
           fi
 
       - uses: actions/checkout@v4
@@ -61,6 +64,13 @@ jobs:
       - name: Test
         working-directory: app
         run: flutter test
+
+      - name: Stop before signing (secrets missing)
+        if: steps.secrets.outputs.missing != ''
+        run: |
+          echo "Unsigned iOS build succeeded. Add the secrets in docs/TESTFLIGHT_SETUP.mn.md (step B-4) to upload to TestFlight." >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Missing repository secrets:${{ steps.secrets.outputs.missing }}"
+          exit 1
 
       - name: Install App Store Connect API key
         run: |
