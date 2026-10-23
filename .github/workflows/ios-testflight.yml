@@ -65,19 +65,6 @@ jobs:
         working-directory: app
         run: flutter test
 
-      - name: Stop before signing (secrets missing)
-        if: steps.secrets.outputs.missing != ''
-        run: |
-          echo "Unsigned iOS build succeeded. Add the secrets in docs/TESTFLIGHT_SETUP.mn.md (step B-4) to upload to TestFlight." >> "$GITHUB_STEP_SUMMARY"
-          echo "::error::Missing repository secrets:${{ steps.secrets.outputs.missing }}"
-          exit 1
-
-      - name: Install App Store Connect API key
-        run: |
-          mkdir -p "$RUNNER_TEMP/keys"
-          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
-          chmod 600 "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
-
       # Without a Maps key the app falls back to OpenStreetMap, so it is optional.
       - name: Configure Google Maps key
         if: env.MAPS_IOS_KEY != ''
@@ -90,6 +77,19 @@ jobs:
         run: |
           flutter build ios --release --no-codesign \
             --build-number=${{ github.run_number }} ${MAPS_DEFINE:-}
+
+      - name: Stop before signing (secrets missing)
+        if: steps.secrets.outputs.missing != ''
+        run: |
+          echo "Unsigned iOS build succeeded. Add the secrets in docs/TESTFLIGHT_SETUP.mn.md (step B-4) to upload to TestFlight." >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Missing repository secrets:${{ steps.secrets.outputs.missing }}"
+          exit 1
+
+      - name: Install App Store Connect API key
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
+          chmod 600 "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
 
       - name: Archive (automatic signing)
         working-directory: app/ios
